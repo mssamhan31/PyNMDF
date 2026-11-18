@@ -1,0 +1,143 @@
+# PyNMDF configuration.
+#
+# Copy this file to config.local.yaml (git-ignored) and edit the paths under `paths`.
+# Everything else is a decision recorded in docs/analysis_plan.md: change it only to test
+# sensitivity. Sections are added as the notebooks that use them are built.
+
+paths:
+  # Ausgrid distribution zone substation data: one archive, or unzipped folder, per reporting
+  # year (1 May to 30 April). Entries are relative to demand_dir; an absolute path also works.
+  demand_dir: "C:/path/to/Ausgrid Distribution Zone Substation/From FY2015"
+  demand_files:
+    2015: "FY 2015.zip"
+    2016: "FY 2016.zip"
+    2017: "FY 2017.zip"
+    2018: "FY2018.zip"
+    2019: "FY 2019.zip"
+    2020: "FY2020.zip"
+    2021: "FY 2021.zip"
+    2022: "FY2022.zip"
+    2023: "Ausgrid Distribution Zone Substation Data FY23.zip"
+    2024: "FY2024.zip"
+    2025: "FY2025 Distribution Zone Substation Data.zip"
+    2026: "C:/path/to/Ausgrid Distribution Zone Substation Data FY26"
+
+  # Ausgrid "average electricity use" by local government area: one workbook per year, keyed by
+  # the year of its 30 June snapshot. FY2024 was published as PDF only (see `pv` when added).
+  pv_dir: "C:/path/to/Ausgrid Avg Electricity Use"
+  pv_files:
+    2015: "Average electricity consumption by LGA FY15 excel.xlsx"
+    2016: "Ausgrid average electricity consumption by LGA 2016 excel.xlsx"
+    2017: "Ausgrid average electricity consumption by LGA FY17 excel.xlsx"
+    2018: "Ausgrid average electricity consumption by LGA 201718 excel.xlsx"
+    2019: "Ausgrid average electricity consumption by LGA 201819.xlsx"
+    2020: "Ausgrid average electricity consumption by LGA 2020.xlsx"
+    2021: "Ausgrid average electricity consumption by LGA 2021.xlsx"
+    2022: "Ausgrid average electricity consumption by LGA 2022 excel.xlsx"
+    2023: "Ausgrid average electricity consumption by LGA FY23.xlsx"
+    2025: "Ausgrid average electricity consumption by LGA 2025.xlsx"
+
+  # BOM Climate Data Online, station 066037 (Sydney Airport AMO), daily files.
+  weather_dir: "C:/path/to/BOM Weather Data/station 066037"
+  weather_files:
+    tmax: "Daily maximum temperature/IDCJAC0010_066037_1800_Data.csv"
+    tmin: "Daily minimum temperature/IDCJAC0011_066037_1800_Data.csv"
+    solar: "Global solar exposure kwh m-2/IDCJAC0016_066037_1800_Data.csv"
+
+  # Outputs, relative to the repository root. All git-ignored.
+  interim: "data/interim"
+  figures: "outputs/figures"
+  tables: "outputs/tables"       # paper tables, named by their number in the paper
+  checks: "outputs/checks"       # what the limitation and robustness statements rely on
+  archive: "outputs/archive"     # superseded and exploratory results (notebooks/archive)
+
+study:
+  first_year: 2015          # calendar years
+  last_year: 2025
+
+cleaning:                   # applied to each reporting-year file, in this order
+  scrambled_roughness_ratio: 0.5  # a day is re-ordered when that cuts its roughness below this share
+  unit_threshold_mw: 1000   # values between a substation's first and last value above this are kW
+  outlier_ratio: 5          # a substation-day is invalid when its median exceeds ratio x ...
+  outlier_quantile: 0.75    # ... this quantile of the substation's absolute values in the file
+  stuck_run_intervals: 96   # one value repeated this long (24 hours) is invalid; zero included
+  max_missing_share: 0.20   # drop a substation with more than this share blank or invalid
+  max_gap_intervals: 8      # fill interior gaps up to this long (2 hours) linearly
+  min_reporting_share: 0.95 # drop an interval when less than this share of usual load reports
+  sensitivity_reporting_shares: [0.90, 0.95, 0.98]
+
+pv:
+  # FY2024 was published as PDF only. Network total at 30 June 2024, residential 1,554,711 kWp
+  # plus non-residential 326,958 kWp, from Ausgrid-average-electricity-consumption-by-LGA-FY24-pdf.pdf.
+  kwp_2024: 1881669
+  # Network PV capacity (kWp) connected at 30 June, from the data stress test. The series read
+  # from the workbooks must match this table.
+  expected_kwp:
+    2015: 229975
+    2016: 287108
+    2017: 345750
+    2018: 448682
+    2019: 619932
+    2020: 780243
+    2021: 1050390
+    2022: 1291296
+    2023: 1562557
+    2024: 1881669
+    2025: 2083690
+
+weather:
+  first_year: 1990            # solar exposure starts in 1990; the weather replay reaches back to here
+  max_gap_days: 3             # fill gaps up to this long linearly; longer gaps rule a replay year out
+
+calendar:
+  holiday_subdivision: "NSW"  # public holidays from the `holidays` package
+
+targets:
+  month_min_kept_share: 0.90  # a monthly value counts only when this share of its half hours is kept
+  troughs:                    # [start hour, end hour) of the interval start, local clock time
+    overnight: [0, 6]
+    daytime: [9, 17]
+  robust_days:                # robustness target: mean of this many lowest daily minima
+    annual: 15
+    monthly: 2
+
+models:
+  seed: 42                    # every random draw derives from this, the model and the origin
+  n_draws: 100                # residual draws per replayed weather year
+  xgboost:                    # M5, fixed settings; no tuning
+    n_estimators: 300
+    max_depth: 3
+    learning_rate: 0.05
+    subsample: 0.8
+
+evaluation:
+  first_test_year: 2019       # rolling origin: train to 2018 and test 2019, then extend a year at a time
+  lowest_days_share: 0.10     # daily comparison (notebook 08): this share of each year's days, lowest by actual, is also scored on its own
+
+figures:
+  low_share: 0.01             # Fig. 2 and Fig. 3 show this share of each year's lowest half hours
+  selected_years: [2015, 2020, 2025]   # Fig. 3 and Fig. 4
+
+checks:
+  sign_check_intervals: 200   # lowest daytime 15-minute intervals per file used by the sign check
+  sign_reference_year: 2024   # first reporting year in which reverse flow is clearly signed
+  # Clock check: does a substation's morning rise move when the clocks change?
+  clock_check_days: 21        # days compared before and after each clock change
+  clock_check_hours: [3, 9.5] # the steepest weekday rise is searched for between these hours
+  clock_check_min_mw: 3       # smaller substations are too noisy to test
+  clock_check_min_shift: 3    # a move of this many 15-minute intervals counts as a shift
+  pv_solar_quantile: 0.99     # M4 check: the target year's sunniest days are this quantile of PV x solar
+  # 30-minute minima per file from the data stress test of 11 November 2026 (diagnostic rule).
+  stress_test_minima_mw:
+    2015: 1378
+    2016: 1391
+    2017: 1497
+    2018: 1507
+    2019: 1511
+    2020: 1473
+    2021: 1442
+    2022: 1425
+    2023: 1294
+    2024: 1364
+    2025: 941
+    2026: 880

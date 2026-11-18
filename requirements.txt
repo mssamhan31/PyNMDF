@@ -1,0 +1,26 @@
+# Pinned environment for PyNMDF (Python 3.11).
+#   py -3.11 -m venv .venv
+#   .venv\Scripts\python -m pip install -r requirements.txt
+
+# Analysis
+numpy==2.4.2
+pandas==2.3.3
+pyarrow==23.0.1
+openpyxl==3.1.5
+matplotlib==3.10.8
+scikit-learn==1.8.0
+xgboost==2.1.4
+holidays==0.90
+pyyaml==6.0.3
+
+# Notebooks
+ipykernel==7.4.0
+nbconvert==7.17.2
+
+# Development
+pytest==8.4.2
+ruff==0.17.4
+black==26.10.1
+
+# This repository, importable as `pynmdf`
+-e .

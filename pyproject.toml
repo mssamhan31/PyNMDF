@@ -1,0 +1,28 @@
+# Minimal project file: it exists so notebooks and tests can `import pynmdf` after
+# `pip install -e .`, and to hold the formatter and linter settings. No release metadata.
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pynmdf"
+version = "0.1.0"
+description = "Analysis code for a conference paper on minimum demand forecasting"
+requires-python = ">=3.11"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 100
+
+[tool.ruff]
+line-length = 100
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
