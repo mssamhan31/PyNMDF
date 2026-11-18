@@ -72,6 +72,11 @@ rule. On the final series two whole-day minima move slightly with the threshold;
 
 Locked decisions in sections 5 to 7 of the prompt stand unless listed here.
 
+**On figure and table numbers.** The paper's set of figures and tables changed in the seventh
+round (D34). Entries dated before it are left as they were written and use the numbers of their
+time; the key in the seventh round translates them. Sections 5 to 11 describe the repository as
+it stands and use the current numbers.
+
 **Agreed on 11 November 2026 (answers to the five questions).**
 
 | ID | Decision |
@@ -243,6 +248,31 @@ The paper's four points, as set by Samhan, are the test of what is a paper artif
 | D32 | **Three looks first made outside the repository are now reproducible, placed by use.** M4's coefficients and the reach of PV x solar beyond its training range (`check_m4_coefficients.csv`, notebook 05) and the bias of POE50, which carries M6's monthly bias (`check_poe50_bias.csv`, notebook 06), are checks, because the paper's cautions rely on them. The holiday miss by holiday is in the archive (`A1_model_exploration`) |
 | D33 | **Left where they were:** the stress-test reproduction stays in notebook 01, shown but not saved; `check_annual_summary.csv` and `check_m5_pv_range.csv` are checks |
 
+**Agreed on 18 November 2026, seventh round: the paper's set becomes four figures and three
+tables.** The repository was first committed before this round, as it stood at the end of the
+sixth.
+
+| ID | Decision |
+|---|---|
+| D34 | **The paper set.** Fig. 1: the annual overnight low and daytime low, with PV capacity at 30 June. Fig. 2: the annual daytime low against PV capacity, eleven points labelled by year, with the fitted line of `table_pv_fit.csv` and its R-squared. Fig. 3: the daily daytime low against solar exposure for 2015, 2020 and 2025, with a line per year. Fig. 4: the POE bands on the annual daytime low, M2 to M5. Table I: the six models. Table II: the daily out-of-sample test. Table III: the one-year-ahead POE scores on the daytime low, six models, annual and monthly, with coverage. `table_pv_fit.csv`, `headline_numbers.csv` and the figure data files stay beside them |
+| D35 | **What the set replaced is archived, and the numbers that still back a sentence are kept as checks.** Archived, with their code in `A2_superseded_figures` and named for what they show: annual maximum, the two lows and energy; the heat map of the lowest half hours; the low end of the load duration curve; sunshine and temperature in two panels; monthly pinball loss by calendar month. Kept as checks: the annual maximum and energy (`check_annual_summary.csv`, notebook 01), the share of the lowest half hours in the daytime window (`check_low_hours.csv`, notebook 04) and the annual minima with date, time and day type (`check_annual_minima.csv`, notebook 04). The POE scores on the whole-day minimum move to `outputs/checks/table3_minimum.csv` |
+| D36 | **How the new figures are drawn.** Fig. 1 has two stacked panels on a shared year axis, in place of two y-axes: the lows on an axis zoomed to their range, PV capacity as bars from zero. Fig. 2 labels the years with two digits, because four-digit labels collide where the 2015 to 2018 points sit together; each label is placed on the first side of its point where it is clear of the other points, labels and the line. Plotting functions are named for what they draw, not by figure number |
+
+Key from the earlier numbers to the current ones:
+
+| Earlier | Now |
+|---|---|
+| Fig. 1 (maximum, the two lows, energy) | Archived as `annual_max_lows_energy`. The current Fig. 1 is new |
+| Fig. 2 (heat map of the lowest 1% of half hours) | Archived as `low_hours_heatmap`. The current Fig. 2 is new |
+| Fig. 3 (low end of the load duration curve) | Archived as `load_duration_low_end` |
+| Fig. 4 (sunshine and temperature, two panels) | Its left panel is the current Fig. 3; the two-panel figure is archived as `solar_and_temperature` |
+| Fig. 5 (POE bands, four panels on the daytime low) | Fig. 4, unchanged. The three-panel versions are archived as `poe_bands_three_panels_*` |
+| Fig. 6 (monthly pinball loss by calendar month) | Archived as `monthly_pinball_daytime_low` and `monthly_pinball_minimum` |
+| Table I (the six models) | Table I |
+| Table II (each year's minimum) | A check, `check_annual_minima.csv` |
+| Table III (POE scores, both targets) | Table III holds the daytime low; the whole-day minimum is a check, `table3_minimum.csv` |
+| Table IV (daily out-of-sample test) | Table II |
+
 **My reading of D9. Confirmed on 18 November 2026.**
 
 | Point | Reading |
@@ -341,8 +371,11 @@ Detailed in section 6.
 ### `plots.py`
 
 `set_style` (8 pt serif, 3.5 in and 7.16 in widths, palette from `#2a78d6`, `#eb6834`, `#1baf7a`,
-no titles), one function per figure, and `save_figure` writing PNG at 600 dpi and PDF. The
-placeholder figures in the skeleton are viewed before each figure is built.
+no titles), one function per figure, and `save_figure` writing PNG at 600 dpi and PDF. Functions
+are named for what they draw, not by figure number (D36): `annual_lows_and_pv` (Fig. 1),
+`daytime_low_against_pv` (Fig. 2), `daytime_low_against_solar` (Fig. 3) and `poe_bands` (Fig. 4)
+draw the paper's figures; `annual_demand`, `low_hours_heatmap`, `low_duration`,
+`solar_and_temperature` and `monthly_pinball` draw the archived ones.
 
 ## 6. Modelling and evaluation
 
@@ -354,7 +387,8 @@ placeholder figures in the skeleton are viewed before each figure is built.
   targets, each with a `valid` flag: `minimum` (lowest kept half hour; D4), `daytime_low` (lowest
   kept half hour between 09:00 and 17:00; D13) and `robust` (mean of the 15 lowest daily minima,
   2 in a month, over complete days; D18).
-- `lowest_intervals(total, share)`: the lowest 1% of each year's half hours, for Fig. 2 and Fig. 3.
+- `lowest_intervals(total, share)`: the lowest 1% of each year's half hours, for the check on
+  when the lowest half hours occur (`check_low_hours.csv`) and two archived figures.
 
 The whole-day minimum is always taken over all kept half hours of the year or month. H1 and H2 are
 judged on the daytime low (D14).
@@ -434,32 +468,34 @@ Each notebook opens with a markdown cell giving the paper section it serves, wha
 inputs, its outputs and a numbered outline; each section has a heading and a short explanation; each
 closes with its result as numbers. Work stops for review after every notebook.
 
-The table is the repository as it stands after the tidy of the sixth round (D26). Paper artifacts
-are in `outputs/figures` and `outputs/tables`; checks are in `outputs/checks`.
+The table is the repository as it stands after the seventh round (D34 to D36), in the current
+numbering. Paper artifacts are in `outputs/figures` and `outputs/tables`; checks are in
+`outputs/checks`.
 
 | Notebook | Paper artifacts | Supporting checks |
 |---|---|---|
-| 01 | - | `check_data_quality` (what the cleaning did; load lost to the 20% rule; scrambled days restored, D10); `check_annual_summary`; `check_kept_by_month`; `check_join_steps` (F1); `check_clock` (F2); `check_sign` (D5). Shown, not saved: the reader against the stress-test minima |
+| 01 | - | `check_data_quality` (what the cleaning did; load lost to the 20% rule; scrambled days restored, D10); `check_annual_summary` (also the annual maximum and energy, D35); `check_kept_by_month`; `check_join_steps` (F1); `check_clock` (F2); `check_sign` (D5). Shown, not saved: the reader against the stress-test minima |
 | 02 | - | `check_pv_capacity`; `check_weather_missing`; `check_weather_quality` |
-| 03 | Fig. 1 (maximum, overnight low, daytime low, energy; D15) and `fig1_data` | - |
-| 04 | Fig. 2 and `fig2_data`; Fig. 3; Table II (D17); Fig. 4 and `fig4_fits` (D16); `table_pv_fit` (D30) | `check_trough_windows` |
+| 03 | Fig. 1 (the two annual lows over PV capacity) and `fig1_data` | - |
+| 04 | Fig. 2 (annual daytime low against PV capacity), `fig2_data` and `table_pv_fit` (D30); Fig. 3 (daily daytime low against solar exposure) and `fig3_fits` | `check_annual_minima` and `check_low_hours` (D35); `check_trough_windows` |
 | 05 | Table I (six models) | `check_complete_days`; `check_m5_pv_range` (D20); `check_holiday_miss` (D19, F4); `check_m4_terms` and `check_m4_coefficients` (F6) |
-| 06 | Table III (D28); Fig. 5 (D27); Fig. 6 and `fig6_data`; `headline_numbers` (H1, H2, model form, and the supplementary M5 against M6) | `check_poe50_bias` |
+| 06 | Table III (POE scores on the daytime low); Fig. 4 (POE bands, M2 to M5); `headline_numbers` (H1, H2, model form, and the supplementary M5 against M6) | `table3_minimum` (D35); `check_poe50_bias` |
 | 07 | - | `table3_robust` and `sensitivity_robust` (D18); `sensitivity_thresholds` (F8); `sensitivity_rescale_factors`, `sensitivity_rescaled_lows`, `table3_daytime_low_rescaled`, `table3_minimum_rescaled`, `sensitivity_rescaled_comparisons` (D12, D22, F7) |
-| 08 | Table IV (D25, D29) | `daily_skill_by_year`; `daily_pairs_by_year` |
+| 08 | Table II (the daily out-of-sample test; D25, D29) | `daily_skill_by_year`; `daily_pairs_by_year` |
 
 | Archive notebook | Writes to `outputs/archive` |
 |---|---|
 | `A1_model_exploration` | The first look at POE50 against the actuals; the day M3 predicts as lowest (F3); the holiday miss by holiday and around Christmas (F4) |
-| `A2_superseded_figures` | Fig. 5 with three panels, on the daytime low and on the whole-day minimum; Fig. 6 on the whole-day minimum, with its data |
+| `A2_superseded_figures` | Annual maximum, the two lows and energy; the heat map of the lowest half hours; the low end of the load duration curve; sunshine and temperature in two panels; the POE bands with three panels, on both targets; monthly pinball loss by calendar month, on both targets (D35) |
 
 Notebooks 05 to 08 and the archive notebooks cover six models. The data passed between notebooks
 are in `data/interim`.
 
-**Status at 18 November 2026: complete.** All eight main notebooks and the two archive notebooks
-were run twice after the tidy and all 69 files they write (outputs and `data/interim`) were
-identical between the runs. The 47 output files that the tidy only moved or renamed are identical,
-byte for byte, to their versions before it. `docs/results_summary.md` holds the numbers behind the
+**Status at 18 November 2026: complete.** After the seventh round, all eight main notebooks and
+the two archive notebooks were run twice and all 79 files they write (outputs and `data/interim`)
+were identical between the runs. The 25 output files that the round only moved or renamed are
+identical, byte for byte, to their versions before it, and the two files that replace the old
+Table III hold its numbers unchanged. `docs/results_summary.md` holds the numbers behind the
 paper by type of evidence, and the README maps every paper artifact and check to its notebook.
 
 ## 8. Tests
@@ -492,7 +528,8 @@ years, the latest file keeps its level, and a join that cannot be measured gets 
 A ninth came with notebook 08: the daily skill tables and pairs match a hand calculation, days
 with no actual are not scored, and the lowest days are picked year by year (D25). A tenth came
 with the tidy: the straight-line fits behind `table_pv_fit.csv` return the right slope, R-squared
-and RMSE (D30). The scoring test also covers the mean error of POE50, and the daily test Table IV.
+and RMSE (D30), and the lowest half hours are shared out correctly between the trough windows
+(D35). The scoring test also covers the mean error of POE50, and the daily test covers Table II.
 
 ## 9. What could go wrong
 
@@ -520,7 +557,8 @@ and RMSE (D30). The scoring test also covers the mean error of POE50, and the da
   test.
 - **Level steps from the 20% rule** (0% to 2.4% of load, by file) and **the sign step at May 2023**
   (roughly 20 to 70 MW on daytime minima before it) add errors common to all models.
-- **Fewer monthly points.** 76 test months; calendar months in Fig. 6 have five to seven points.
+- **Fewer monthly points.** 76 test months for the whole-day minimum and 77 for the daytime low;
+  a single calendar month has five to seven points.
 - **Actuals come from kept half hours only.** In 2024 (88% kept, January almost absent) a simulated
   year covers every day while the actual does not. The review suggested dropping simulated days
   that are missing in the target year; I have not adopted it, because a forecast should not know
@@ -537,6 +575,12 @@ and RMSE (D30). The scoring test also covers the mean error of POE50, and the da
 - **Practical.** Reading raw files takes about four minutes (cached to parquet afterwards);
   notebook execution needs `ipykernel` and `nbconvert` installed in the venv; raw folders are on
   OneDrive and in Downloads and are only ever read.
+- **A notebook run that fails once, with no cause found.** Twice, a notebook that saves figures
+  returned an error code on one run and ran clean on the next with nothing changed: notebook 04
+  early on, and notebooks 03 and 04 together on a second full run in the seventh round. Both
+  times the error text had been discarded. The files written were identical once the notebooks
+  were rerun. A lock on a figure file is the suspicion, but opening a figure and rerunning at
+  once did not reproduce it. Keep the error output when running the notebooks in a batch.
 
 **Alternatives considered and set aside.** A per-value outlier rule (misses 8% of Morisset's
 block); hand-listed bad blocks (no automatic rule); a short stuck-run threshold (drops coarse but
@@ -569,7 +613,7 @@ No commit, push or pull request unless asked.
 - Notebook 02's assertion on the PV table passes.
 - Each notebook is run twice and its saved parquet and CSV outputs compared, to confirm fixed seeds
   reproduce the same numbers.
-- At the end: six figures (PNG and PDF) and four tables (CSV) in `outputs/figures` and
+- At the end: four figures (PNG and PDF) and three tables (CSV) in `outputs/figures` and
   `outputs/tables`, named by their number in the paper, with `table_pv_fit.csv`, the figure data
   and `headline_numbers.csv` beside them; the supporting checks in `outputs/checks`; the archive
   in `outputs/archive`. All eight main notebooks and the two archive notebooks run from raw data

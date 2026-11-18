@@ -79,7 +79,7 @@ def test_daily_skill_matches_hand_calculation():
     assert np.allclose(by_year.xs("all days", level="day_set")["difference_mw"], -1.0)
     assert by_year.index.get_level_values("year").unique().tolist() == [2020, 2021]
 
-    # --- Table IV holds the same numbers: the models first, then the pair.
+    # --- The table of the daily test holds the same numbers: the models first, then the pair.
     table = evaluate.daily_table(errors, {"B against A": ("B", "A")})
     assert table.index.tolist() == ["A", "B", "B against A"]
     assert table.loc["B", ["all_days_n", "all_days_mae_mw", "lowest_days_mae_mw"]].tolist() == [

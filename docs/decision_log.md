@@ -246,3 +246,30 @@ Paper numbering now differs from the repository names (paper Fig. 3 is `fig4`, F
 Fig. 5 is `fig6`; paper Table III is `table4.csv`, Table IV is `table3.csv`). The map is in
 Appendix A14 of the prewriting plan. Paper plan v8, scope plan v6 and the skeleton
 `PyNMDF_skeleton_20261118.docx` are in `09_AI Artifacts\PyNMDF`.
+
+## 18 November 2026: figure and table set revised
+
+**Why.** The first set showed the shift three times (Fig. 1, the heat map, the annual minima
+table) and gave PV's role, the strongest new evidence, no figure. Two items carried no clear
+message: the monthly scores figure and the temperature panel.
+
+| Paper item | What it shows | Point it supports |
+|---|---|---|
+| Fig. 1 | Overnight and daytime lows (top) and PV capacity (bottom), 2015 to 2025 | 1: the shift |
+| Fig. 2 | Annual daytime low against PV capacity, eleven years, fitted line, R-squared 0.96 | 2: PV drives it |
+| Fig. 3 | Daily daytime low against solar exposure, 2015, 2020, 2025 | 2 and 3: the response to sunshine steepens |
+| Fig. 4 | POE bands for four models on the annual daytime low | 4: one-year-ahead forecasts |
+| Table I | The six models | Method |
+| Table II | Daily out-of-sample test | 2 and 3 |
+| Table III | POE scores on the daytime low | 4 |
+
+- Fig. 1 uses two stacked panels, not two y-axes: both would be in MW on different scales, which
+  invites comparing a bar's height with a line's value.
+- Archived, with their code, in `outputs/archive`: the heat map, the load duration curve, the
+  temperature panel, the monthly scores figure, and the earlier Fig. 1 with maximum demand and
+  energy.
+- Facts that moved from figures or tables into sentences keep a source file in `outputs/checks`:
+  maximum and energy, the annual minima with date and day type, the daytime share of the lowest
+  half hours, and the whole-day-minimum scores.
+- Paper numbers now match the repository file names. First commit made locally (root commit
+  amended to remove a local path); the new set is on branch `paper-set-v2`.

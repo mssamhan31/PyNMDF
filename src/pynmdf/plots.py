@@ -1,9 +1,13 @@
-"""Figures for the paper: a shared style and one function per figure.
+"""Figures: a shared style and one function per figure.
 
 Style follows the IEEE two-column page: 3.5 inches for one column and 7.16 inches for full
 width, 8 pt serif text, no title inside a figure (captions are written in the paper), and axis
 labels with units. Every series differs in colour, marker and line style at once, so a figure
 still reads in greyscale.
+
+Functions are named for what they draw, not for a figure number, because the paper's numbering
+changes. The README says which function draws which figure of the paper and which figures are
+archived.
 """
 
 from pathlib import Path
@@ -20,6 +24,7 @@ from matplotlib.ticker import FuncFormatter
 ONE_COLUMN, FULL_WIDTH = 3.5, 7.16  # inches
 BLUE, ORANGE, GREEN = "#2a78d6", "#eb6834", "#1baf7a"
 INK, MUTED, GRID = "#222222", "#555555", "#dddddd"
+LIGHT = "#c4c4c4"  # bars that give context: lighter than any line, darker than the gridlines
 # One (colour, marker, line style) per series, always used in this order.
 SERIES = [(BLUE, "o", "-"), (ORANGE, "s", "--"), (GREEN, "^", "-.")]
 # A model keeps its colour, marker and line style in every figure it appears in. M2, the
@@ -85,8 +90,153 @@ def save_figure(figure: Figure, folder: Path, name: str) -> None:
     figure.savefig(folder / f"{name}.pdf", metadata={"CreationDate": None})
 
 
-def fig1_annual_demand(annual: pd.DataFrame) -> Figure:
-    """Fig. 1: annual maximum, overnight low and daytime low (lines, MW), and energy (bars, GWh).
+# --------------------------------------------------------------------------------------------
+# The two annual lows and PV capacity
+# --------------------------------------------------------------------------------------------
+
+
+def annual_lows_and_pv(annual: pd.DataFrame) -> Figure:
+    """The annual overnight and daytime lows (top) over PV capacity (bottom), by year.
+
+    Two panels share the year axis, in place of two y-axes on one panel: the lows are zoomed to
+    their own range, and PV capacity starts at zero.
+
+    Args:
+        annual: One row per year with ``overnight_low_mw``, ``daytime_low_mw`` and ``pv_mw``.
+    """
+    figure, (lows, capacity) = plt.subplots(
+        2, 1, figsize=(ONE_COLUMN, 3.0), sharex=True, layout="constrained", height_ratios=[2.2, 1]
+    )
+    years = annual.index
+    series = {"overnight_low_mw": "Overnight low", "daytime_low_mw": "Daytime low"}
+    for (column, label), (colour, marker, style) in zip(series.items(), SERIES):
+        lows.plot(years, annual[column], color=colour, marker=marker, linestyle=style, label=label)
+    lows.set(ylabel="Annual low (MW)")
+
+    capacity.bar(years, annual["pv_mw"], width=0.6, color=LIGHT)
+    capacity.set(xlabel="Year", ylabel="PV capacity (MW)", xticks=years[::2])
+    for axis in (lows, capacity):
+        axis.yaxis.set_major_formatter(THOUSANDS)
+    figure.legend(loc="outside upper center", ncols=2, handlelength=2.4)
+    return figure
+
+
+def _label_points(axis, x, y, labels, line: Line2D, gap: float = 4.0) -> None:
+    """Write a label beside each point, on the first side where it is clear.
+
+    A side is clear when the label stays inside the axes, touches no other point, no label
+    already placed and no part of ``line``, and faces its own point more closely than any other.
+    The sides are tried in a fixed order, so the result is the same on every run.
+
+    Args:
+        axis: The axes holding the points.
+        x: Horizontal positions of the points, in data units.
+        y: Vertical positions of the points, in data units.
+        labels: One label per point.
+        line: A two-point line the labels must not cross.
+        gap: Distance between a point and its label, in points.
+    """
+    figure = axis.figure
+    figure.canvas.draw()  # the layout must be final before text can be measured
+    renderer = figure.canvas.get_renderer()
+    frame = axis.get_window_extent(renderer)
+    x, y = np.asarray(x, dtype=float), np.asarray(y, dtype=float)
+    points = axis.transData.transform(np.column_stack([x, y]))
+    along = np.linspace(*line.get_xdata(), 200)
+    on_line = axis.transData.transform(np.column_stack([along, np.interp(along, *line.get_data())]))
+    # A label keeps half the gap away from every point, which clears the marker drawn on it.
+    margin = gap * figure.dpi / 72 / 2
+    align_x, align_y = {1: "left", 0: "center", -1: "right"}, {1: "bottom", 0: "center", -1: "top"}
+    placed = []
+
+    def write(own: int, dx: int, dy: int):
+        """Write the label of point ``own`` on one side of it and return it with its box."""
+        text = axis.annotate(
+            str(labels[own]),
+            (x[own], y[own]),
+            xytext=(dx * gap, dy * gap),
+            textcoords="offset points",
+            ha=align_x[dx],
+            va=align_y[dy],
+        )
+        text.set_in_layout(False)
+        return text, text.get_window_extent(renderer)
+
+    def within(marks: np.ndarray, low: np.ndarray, high: np.ndarray) -> bool:
+        """Say whether any of the marks lies inside the rectangle from ``low`` to ``high``."""
+        return bool(((marks >= low) & (marks <= high)).all(axis=1).any())
+
+    def is_clear(box, own: int) -> bool:
+        inside = (
+            frame.x0 <= box.x0 and box.x1 <= frame.x1 and frame.y0 <= box.y0 and box.y1 <= frame.y1
+        )
+        # The label points at its marker from the nearest part of its box. No other marker may
+        # be closer to that spot, or the label would read as belonging to it.
+        facing = np.clip(points[own], box.min, box.max)
+        distance = np.hypot(*(points - facing).T)
+        return (
+            inside
+            and not within(points, box.min - margin, box.max + margin)
+            and not within(on_line, box.min, box.max)
+            and distance[own] <= distance.min()
+            and not any(box.overlaps(other) for other in placed)
+        )
+
+    # Above and below first, then the sides, then the corners.
+    sides = [(0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (-1, 1), (1, -1), (-1, -1)]
+    for own in range(len(labels)):
+        for dx, dy in sides:
+            text, box = write(own, dx, dy)
+            if is_clear(box, own):
+                break
+            text.remove()
+        else:
+            # No side is clear: the label goes above its point, as the least bad place.
+            _, box = write(own, 0, 1)
+        placed.append(box)
+
+
+def daytime_low_against_pv(points: pd.DataFrame, fit: pd.Series) -> Figure:
+    """The annual daytime low against PV capacity, each year labelled, with the fitted line.
+
+    Args:
+        points: One row per year with ``pv_mw`` and ``daytime_low_mw``; the index is the year.
+        fit: ``slope``, ``intercept`` and ``r_squared`` of the straight line of the daytime low
+            on PV capacity (a row of ``targets.line_fits``).
+    """
+    figure, axis = plt.subplots(figsize=(ONE_COLUMN, 2.6), layout="constrained")
+    # The daytime low keeps the colour and marker it has beside the overnight low.
+    colour, marker, _ = SERIES[1]
+    ends = np.array([points["pv_mw"].min(), points["pv_mw"].max()])
+    (line,) = axis.plot(ends, fit["intercept"] + fit["slope"] * ends, color=MUTED, linewidth=1)
+    axis.plot(
+        points["pv_mw"], points["daytime_low_mw"], color=colour, marker=marker, linestyle="none"
+    )
+    axis.set(xlabel="PV capacity at 30 June (MW)", ylabel="Annual daytime low (MW)")
+    axis.margins(0.08)
+    axis.xaxis.set_major_formatter(THOUSANDS)
+    axis.yaxis.set_major_formatter(THOUSANDS)
+    axis.text(
+        0.97,
+        0.95,
+        f"Straight-line fit: R² = {fit['r_squared']:.2f}",
+        transform=axis.transAxes,
+        ha="right",
+        va="top",
+    )
+    # Two-digit years: the first four points sit too close together for four digits.
+    years = [f"\u2019{year % 100:02d}" for year in points.index]
+    _label_points(axis, points["pv_mw"], points["daytime_low_mw"], years, line)
+    return figure
+
+
+# --------------------------------------------------------------------------------------------
+# Annual demand: maximum, the two lows and energy
+# --------------------------------------------------------------------------------------------
+
+
+def annual_demand(annual: pd.DataFrame) -> Figure:
+    """Annual maximum, overnight low and daytime low (lines, MW), and energy (bars, GWh).
 
     The year's minimum is the lower of the two low lines. Two axes at the author's request; their
     scales are aligned so that 1,000 MW sits level with 10,000 GWh and the gridlines coincide.
@@ -125,8 +275,8 @@ def fig1_annual_demand(annual: pd.DataFrame) -> Figure:
     return figure
 
 
-def fig2_low_hours(hour_shares: pd.DataFrame, pv_kwp: pd.Series) -> Figure:
-    """Fig. 2: when the lowest half hours of each year occur, over PV capacity by year.
+def low_hours_heatmap(hour_shares: pd.DataFrame, pv_kwp: pd.Series) -> Figure:
+    """When the lowest half hours of each year occur (heat map), over PV capacity by year.
 
     Args:
         hour_shares: The output of ``targets.low_hour_shares``: hours (rows) by years (columns).
@@ -157,8 +307,8 @@ def fig2_low_hours(hour_shares: pd.DataFrame, pv_kwp: pd.Series) -> Figure:
     return figure
 
 
-def fig3_low_duration(lowest: pd.DataFrame, years: list[int]) -> Figure:
-    """Fig. 3: the low end of the load duration curve for selected years.
+def low_duration(lowest: pd.DataFrame, years: list[int]) -> Figure:
+    """The low end of the load duration curve for selected years.
 
     Args:
         lowest: The output of ``targets.lowest_intervals``.
@@ -180,8 +330,40 @@ def fig3_low_duration(lowest: pd.DataFrame, years: list[int]) -> Figure:
     return figure
 
 
-def fig4_weather(daily: pd.DataFrame, solar_fits: pd.DataFrame) -> Figure:
-    """Fig. 4: daytime low against solar exposure (left), minimum against temperature (right).
+def daytime_low_against_solar(daily: pd.DataFrame, solar_fits: pd.DataFrame) -> Figure:
+    """Each day's daytime low against its solar exposure, with a least-squares line per year.
+
+    Args:
+        daily: One row per date with ``daytime`` (MW) and ``solar`` (MJ/m2).
+        solar_fits: The output of ``targets.yearly_line_fits`` for ``daytime`` on ``solar``; its
+            index gives the years to draw.
+    """
+    figure, axis = plt.subplots(figsize=(ONE_COLUMN, 2.6), layout="constrained")
+    handles = []
+    for (year, fit), (colour, marker, style) in zip(solar_fits.iterrows(), SERIES):
+        days = daily[daily.index.year == year].dropna(subset=["solar", "daytime"])
+        axis.scatter(
+            days["solar"],
+            days["daytime"],
+            s=5,
+            color=colour,
+            marker=marker,
+            alpha=0.45,
+            linewidths=0,
+        )
+        ends = np.array([fit["x_min"], fit["x_max"]])
+        axis.plot(ends, fit["intercept"] + fit["slope"] * ends, color=colour, linestyle=style)
+        # One legend entry per year, showing its marker and its line together.
+        handles.append(Line2D([], [], color=colour, marker=marker, linestyle=style, label=year))
+
+    axis.set(xlabel="Solar exposure (MJ/m²)", ylabel="Daily daytime low (MW)")
+    axis.yaxis.set_major_formatter(THOUSANDS)
+    figure.legend(handles=handles, loc="outside upper center", ncols=3, handlelength=2.4)
+    return figure
+
+
+def solar_and_temperature(daily: pd.DataFrame, solar_fits: pd.DataFrame) -> Figure:
+    """Daytime low against solar exposure (left), daily minimum against temperature (right).
 
     Sunshine acts on the midday dip, so the left panel uses the daily daytime low and adds a
     least-squares line per year to show how the slope changes. Temperature acts on the whole
@@ -224,8 +406,8 @@ def fig4_weather(daily: pd.DataFrame, solar_fits: pd.DataFrame) -> Figure:
     return figure
 
 
-def fig5_poe_bands(annual: pd.DataFrame, models: list[str], ylabel: str) -> Figure:
-    """Fig. 5: the actual annual value against each model's POE10, POE50 and POE90.
+def poe_bands(annual: pd.DataFrame, models: list[str], ylabel: str) -> Figure:
+    """The actual annual value against each model's POE10, POE50 and POE90.
 
     One panel per model on a shared y-axis. The band runs from POE90 (low side) to POE10 (high
     side) and the line is POE50.
@@ -268,8 +450,8 @@ def fig5_poe_bands(annual: pd.DataFrame, models: list[str], ylabel: str) -> Figu
     return figure
 
 
-def fig6_monthly_pinball(by_month: pd.DataFrame, models: list[str]) -> Figure:
-    """Fig. 6: mean pinball loss of the monthly forecasts, by calendar month.
+def monthly_pinball(by_month: pd.DataFrame, models: list[str]) -> Figure:
+    """Mean pinball loss of the monthly forecasts, by calendar month.
 
     Args:
         by_month: ``pinball_mean`` (MW) indexed by model and calendar month, for one target.

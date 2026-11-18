@@ -84,7 +84,7 @@ def annual_window_lows(total: pd.Series, windows: dict) -> pd.DataFrame:
 def annual_minimum_table(
     total: pd.Series, weather: pd.DataFrame, subdivision: str, windows: dict
 ) -> pd.DataFrame:
-    """Describe each year's minimum: when it fell and what the day was like (Table II).
+    """Describe each year's minimum: when it fell and what the day was like.
 
     Args:
         total: The 30-minute network total.
@@ -233,6 +233,26 @@ def yearly_line_fits(daily: pd.DataFrame, x: str, y: str, years: list[int]) -> p
             "days": len(days),
         }
     return pd.DataFrame.from_dict(fits, orient="index").rename_axis("year")
+
+
+def low_window_shares(hour_shares: pd.DataFrame, windows: dict) -> pd.DataFrame:
+    """Return the share of each year's lowest half hours that start inside each trough window.
+
+    Args:
+        hour_shares: The output of ``low_hour_shares``: clock hours (rows) by years (columns),
+            in per cent.
+        windows: Window name to ``[start hour, end hour)`` of the interval start.
+
+    Returns:
+        One row per year: a column ``<window>_pct`` for each window, and ``other_pct`` for the
+        half hours that start outside every window.
+    """
+    shares = {
+        f"{name}_pct": hour_shares.loc[start : end - 1].sum()
+        for name, (start, end) in windows.items()
+    }
+    table = pd.DataFrame(shares).rename_axis("year")
+    return table.assign(other_pct=100 - table.sum(axis=1))
 
 
 def line_fits(table: pd.DataFrame, y: str, xs: list[str]) -> pd.DataFrame:

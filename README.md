@@ -15,7 +15,8 @@ Two documents sit beside this one:
 - [docs/results_summary.md](docs/results_summary.md): the numbers behind the paper, by type of
   evidence, each with the file it comes from.
 - [docs/analysis_plan.md](docs/analysis_plan.md): the design, and the record of every decision
-  and finding made while building (D1 to D33, F1 to F11).
+  and finding made while building (D1 to D36, F1 to F11). Its seventh round holds the key from
+  the paper's earlier figure and table numbers to the current ones.
 
 ## Install
 
@@ -64,7 +65,9 @@ foreach ($name in "A1_model_exploration", "A2_superseded_figures") {
 ```
 
 Every run reproduces every file exactly: the random draws are seeded and XGBoost runs on one
-thread.
+thread. Twice while this repository was built, a notebook that saves figures stopped with an
+error on one run and ran clean on the next with nothing changed. The cause was not found; if it
+happens, run the notebook again.
 
 Tests, linter and formatter:
 
@@ -77,9 +80,9 @@ Tests, linter and formatter:
 ## Reproduce the main result
 
 After the eight notebooks have run, the one-year-ahead comparison is in
-`outputs/tables/table3.csv` (pinball loss and coverage of the six models) and
+`outputs/tables/table3.csv` (pinball loss and coverage of the six models on the daytime low) and
 `outputs/tables/headline_numbers.csv` (the four comparisons between models). The daily
-out-of-sample test is in `outputs/tables/table4.csv`. `docs/results_summary.md` lists every
+out-of-sample test is in `outputs/tables/table2.csv`. `docs/results_summary.md` lists every
 number the paper relies on with its file.
 
 ## Where results go
@@ -87,8 +90,8 @@ number the paper relies on with its file.
 | Folder | Holds |
 |---|---|
 | `outputs/figures`, `outputs/tables` | The paper's figures and tables, named by their number in the paper, with the data behind the figures |
-| `outputs/checks` | Everything the paper's limitation and robustness statements rely on |
-| `outputs/archive` | Superseded versions and exploration, written by `notebooks/archive` |
+| `outputs/checks` | Everything the paper's limitation and robustness statements, and its sentences without a figure, rely on |
+| `outputs/archive` | Superseded figures and exploration, written by `notebooks/archive` and named for what they show |
 | `data/interim` | Cached data passed between notebooks |
 
 All four are git-ignored and rebuilt by the notebooks. Figures are saved as PNG (600 dpi) and
@@ -96,20 +99,19 @@ PDF, tables and checks as CSV.
 
 ## Paper artifacts
 
-| Artifact | File | Notebook |
-|---|---|---|
-| Fig. 1: annual maximum, overnight low, daytime low and energy | `figures/fig1`, `tables/fig1_data.csv` | 03 |
-| Fig. 2: when the lowest 1% of half hours occur, with PV capacity | `figures/fig2`, `tables/fig2_data.csv` | 04, section 2 |
-| Fig. 3: low end of the load duration curve (optional candidate) | `figures/fig3` | 04, section 3 |
-| Fig. 4: daytime low against solar exposure; minimum against temperature | `figures/fig4`, `tables/fig4_fits.csv` | 04, section 5 |
-| Fig. 5: POE bands on the annual daytime low, M2 to M5 | `figures/fig5` | 06, section 3 |
-| Fig. 6: monthly pinball loss by calendar month, daytime low (optional candidate) | `figures/fig6`, `tables/fig6_data.csv` | 06, section 4 |
-| Table I: the six models | `tables/table1.csv` | 05, section 3 |
-| Table II: each year's minimum, with the overnight and daytime lows | `tables/table2.csv` | 04, section 4 |
-| Table III: one-year-ahead POE scores, six models, both targets, annual and monthly | `tables/table3.csv` | 06, section 2 |
-| Table IV: daily out-of-sample test, the models and three pairs | `tables/table4.csv` | 08, section 6 |
-| Straight-line fit of the annual daytime low on PV capacity and on the year | `tables/table_pv_fit.csv` | 04, section 6 |
-| The four comparisons between models, on pinball loss | `tables/headline_numbers.csv` | 06, section 5 |
+Four figures and three tables.
+
+| Artifact | File | Notebook | Drawn by |
+|---|---|---|---|
+| Fig. 1: the annual overnight low and daytime low, over PV capacity | `figures/fig1`, `tables/fig1_data.csv` | 03 | `plots.annual_lows_and_pv` |
+| Fig. 2: the annual daytime low against PV capacity, with the fitted line and R-squared | `figures/fig2`, `tables/fig2_data.csv` | 04, section 2 | `plots.daytime_low_against_pv` |
+| Fig. 3: the daily daytime low against solar exposure, 2015, 2020 and 2025 | `figures/fig3`, `tables/fig3_fits.csv` | 04, section 3 | `plots.daytime_low_against_solar` |
+| Fig. 4: POE bands on the annual daytime low, M2 to M5 | `figures/fig4` | 06, section 4 | `plots.poe_bands` |
+| Table I: the six models | `tables/table1.csv` | 05, section 3 | |
+| Table II: the daily out-of-sample test, the models and three pairs | `tables/table2.csv` | 08, section 6 | |
+| Table III: one-year-ahead POE scores on the daytime low, six models, annual and monthly | `tables/table3.csv` | 06, section 2 | |
+| Straight-line fit of the annual daytime low on PV capacity and on the year | `tables/table_pv_fit.csv` | 04, section 2 | |
+| The four comparisons between models, on pinball loss | `tables/headline_numbers.csv` | 06, section 5 | |
 
 ## Supporting checks
 
@@ -127,29 +129,38 @@ All in `outputs/checks`.
 | PV capacity against the expected table | `check_pv_capacity.csv` | 02, section 2 |
 | Weather gaps | `check_weather_missing.csv` | 02, section 4 |
 | Temperature quality flags | `check_weather_quality.csv` | 02, section 5 |
-| Whether the two trough windows catch the daily minimum | `check_trough_windows.csv` | 04, section 7 |
+| Each year's minimum, with its date, time and day type, and the two lows | `check_annual_minima.csv` | 04, section 4 |
+| Share of the lowest 1% of half hours in the daytime and overnight windows | `check_low_hours.csv` | 04, section 5 |
+| Whether the two trough windows catch the daily minimum | `check_trough_windows.csv` | 04, section 6 |
 | Complete days behind the 15-lowest-days measure | `check_complete_days.csv` | 05, section 2 |
 | Plain XGBoost beyond the PV capacity it was trained on | `check_m5_pv_range.csv` | 05, section 5 |
 | The holiday check: public holidays against ordinary weekend days | `check_holiday_miss.csv` | 05, section 6 |
 | M4 term diagnosis: one group of weather terms switched off | `check_m4_terms.csv` | 05, section 7 |
 | M4's weather coefficients and the reach of PV x solar beyond training | `check_m4_coefficients.csv` | 05, section 7 |
+| One-year-ahead POE scores on the whole-day minimum | `table3_minimum.csv` | 06, section 3 |
 | Bias of POE50 by model, including M6's monthly bias | `check_poe50_bias.csv` | 06, section 6 |
-| The 15-lowest-days measure: Table III and the comparisons on it | `table3_robust.csv`, `sensitivity_robust.csv` | 07, section 2 |
+| The 15-lowest-days measure: POE scores and the comparisons on it | `table3_robust.csv`, `sensitivity_robust.csv` | 07, section 2 |
 | Reporting thresholds of 90%, 95% and 98% | `sensitivity_thresholds.csv` | 07, section 3 |
 | The rescaled series: factors and annual lows | `sensitivity_rescale_factors.csv`, `sensitivity_rescaled_lows.csv` | 07, sections 4.1 and 4.2 |
-| The rescaled series: Table III and the comparisons | `table3_daytime_low_rescaled.csv`, `table3_minimum_rescaled.csv`, `sensitivity_rescaled_comparisons.csv` | 07, sections 4.3 and 4.4 |
-| Table IV by test year | `daily_skill_by_year.csv`, `daily_pairs_by_year.csv` | 08, sections 4 and 5 |
+| The rescaled series: POE scores and the comparisons | `table3_daytime_low_rescaled.csv`, `table3_minimum_rescaled.csv`, `sensitivity_rescaled_comparisons.csv` | 07, sections 4.3 and 4.4 |
+| Table II by test year | `daily_skill_by_year.csv`, `daily_pairs_by_year.csv` | 08, sections 4 and 5 |
+
+Three checks hold the numbers of figures and a table the paper no longer shows but still refers
+to in a sentence: `check_annual_summary.csv` (annual maximum and energy), `check_low_hours.csv`
+(the daytime share of the lowest half hours) and `check_annual_minima.csv` (the annual minima
+with date, time and day type).
 
 ## The archive
 
 `notebooks/archive` holds two notebooks that write to `outputs/archive`. Nothing in the archive
 is used by the paper or by its limitation and robustness statements; it is kept so that earlier
-versions and exploration stay reproducible.
+versions and exploration stay reproducible. Archived files are named for what they show, not by
+a figure number, so that none can be mistaken for a current figure of the paper.
 
 | Notebook | Holds |
 |---|---|
 | `A1_model_exploration` | The first look at each model's POE50 against the actuals; the day M3 predicts as lowest, which led to the single non-working-day flag; the miss on public holidays, holiday by holiday and around Christmas |
-| `A2_superseded_figures` | Fig. 5 with three panels (M2, M3, M4), on the daytime low and on the whole-day minimum; Fig. 6 on the whole-day minimum, with its data |
+| `A2_superseded_figures` | Annual maximum, the two lows and energy (`annual_max_lows_energy`); the heat map of when the lowest half hours occur (`low_hours_heatmap`); the low end of the load duration curve (`load_duration_low_end`); sunshine and temperature in two panels (`solar_and_temperature`); POE bands with three panels, on both targets (`poe_bands_three_panels_*`); monthly pinball loss by calendar month, on both targets (`monthly_pinball_*`) |
 
 ## Layout
 
@@ -170,7 +181,7 @@ src/pynmdf/              the logic, as a small importable package
   models.py              the daily models: the nested ladder M2 to M5, and M6
   poe.py                 POE10, POE50 and POE90: past errors for M1, the replay for M2 to M6
   evaluate.py            rolling-origin backtest, scores, comparisons, checks and daily skill
-  plots.py               shared figure style and one function per figure
+  plots.py               shared figure style; one function per figure, named for what it draws
 notebooks/               the eight main notebooks: paper artifacts and supporting checks only
 notebooks/archive/       two notebooks for superseded figures and exploration
 tests/                   pytest tests on synthetic data

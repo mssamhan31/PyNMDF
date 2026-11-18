@@ -11,14 +11,21 @@ before, with the target year's PV capacity taken as known.
 
 ## 0. Reading guide
 
+The paper has four figures and three tables. Fig. 1 is the two annual lows over PV capacity;
+Fig. 2 the annual daytime low against PV capacity; Fig. 3 the daily daytime low against solar
+exposure; Fig. 4 the POE bands on the annual daytime low. Table I lists the six models; Table II
+is the daily out-of-sample test; Table III holds the one-year-ahead POE scores on the daytime
+low. Numbers the paper states in a sentence, without a figure or table, come from the checks
+named beside them.
+
 ### 0.1 The paper's four points and where their evidence is
 
 | Point | Evidence | Section |
 |---|---|---|
-| 1. The minimum has shifted from the overnight low to the daytime low | Fig. 1, Fig. 2, Table II | 1.1 to 1.3 |
-| 2. PV capacity tracks the daytime low over the decade and predicts the low days better than a time trend | `table_pv_fit.csv`; Table IV, M3 against M2 | 1.4, 2.2 |
-| 3. Weather explains which days are low | Fig. 4; Table IV, M4 against M3 and M5 against M6 | 1.5, 2.2 |
-| 4. One year ahead, the tree model with PV and weather forecasts best, and weather helps only in that form | Table III; `headline_numbers.csv` | 3.1, 3.2 |
+| 1. The minimum has shifted from the overnight low to the daytime low | Fig. 1; the checks on the lowest half hours and on the annual minima | 1.1 to 1.3 |
+| 2. PV capacity tracks the daytime low over the decade and predicts the low days better than a time trend | Fig. 2 and `table_pv_fit.csv`; Table II, M3 against M2 | 1.4, 2.2 |
+| 3. Weather explains which days are low | Fig. 3; Table II, M4 against M3 and M5 against M6 | 1.5, 2.2 |
+| 4. One year ahead, the tree model with PV and weather forecasts best, and weather helps only in that form | Table III and Fig. 4; `headline_numbers.csv` | 3.1 to 3.3 |
 
 Numbers that qualify a point are stated beside it: section 3.2 for point 2 (one year ahead, on
 POE scores, M3 against M2 goes the other way on the annual targets), and section 3.4 for point 4
@@ -35,7 +42,7 @@ POE scores, M3 against M2 goes the other way on the annual targets), and section
 | After the first run of the models, before any score | One non-working-day flag in place of separate weekend and holiday flags; M5 kept as plain XGBoost | D19, D20 |
 | **After the scores of M1 to M5 were seen** | **M6** (XGBoost with M3's information) and the supplementary comparison M5 against M6 | D23 |
 | **After the scores were seen** | **Notebook 08**, the daily out-of-sample test, and its three pairs | D25 |
-| After the scores were seen | The diagnosis of M4 (M4 itself unchanged); the method of the rescaling; the straight-line fit of section 1.4; Fig. 5 with four panels | D24, D22, D30, D27 |
+| After the scores were seen | The diagnosis of M4 (M4 itself unchanged); the method of the rescaling; the straight-line fit of section 1.4 and Fig. 2; the fourth panel (M5) of Fig. 4 | D24, D22, D30, D27, D34 |
 
 ### 0.3 Three things to keep in view
 
@@ -48,21 +55,21 @@ POE scores, M3 against M2 goes the other way on the annual targets), and section
 
 ## 1. Descriptive evidence
 
-### 1.1 The two lows, maximum and energy by year (Fig. 1)
+### 1.1 The two lows and PV capacity by year (Fig. 1)
 
-| Year | Overnight low | Daytime low | Maximum | Energy (GWh) |
-|---|---|---|---|---|
-| 2015 | 1,368 | 1,833 | 4,633 | 21,444 |
-| 2016 | 1,433 | 1,891 | 4,717 | 22,013 |
-| 2017 | 1,474 | 1,888 | 5,269 | 22,386 |
-| 2018 | 1,495 | 1,902 | 4,676 | 22,291 |
-| 2019 | 1,473 | 1,759 | 5,146 | 21,931 |
-| 2020 | 1,429 | 1,671 | 5,066 | 20,927 |
-| 2021 | 1,388 | 1,357 | 4,459 | 19,805 |
-| 2022 | 1,428 | 1,458 | 4,226 | 20,175 |
-| 2023 | 1,393 | 1,080 | 4,757 | 19,287 |
-| 2024 | 1,420 | 1,019 | 4,679 | 19,685 |
-| 2025 | 1,435 | 880 | 4,607 | 19,872 |
+| Year | Overnight low | Daytime low | PV capacity at 30 June |
+|---|---|---|---|
+| 2015 | 1,368 | 1,833 | 230 |
+| 2016 | 1,433 | 1,891 | 287 |
+| 2017 | 1,474 | 1,888 | 346 |
+| 2018 | 1,495 | 1,902 | 449 |
+| 2019 | 1,473 | 1,759 | 620 |
+| 2020 | 1,429 | 1,671 | 780 |
+| 2021 | 1,388 | 1,357 | 1,050 |
+| 2022 | 1,428 | 1,458 | 1,291 |
+| 2023 | 1,393 | 1,080 | 1,563 |
+| 2024 | 1,420 | 1,019 | 1,882 |
+| 2025 | 1,435 | 880 | 2,084 |
 
 The overnight low is the lowest half hour between 00:00 and 06:00; the daytime low the lowest
 between 09:00 and 17:00. Over 2015 to 2025 the overnight low stays within 1,368 to 1,495 MW; the
@@ -71,21 +78,29 @@ the overnight low in 2021, 2023, 2024 and 2025.
 
 Source: `outputs/tables/fig1_data.csv` (notebook 03).
 
-### 1.2 When the lowest 1% of half hours occur (Fig. 2)
+Annual maximum and energy, which the paper states in a sentence (check, not a figure):
+
+| Year | 2015 | 2016 | 2017 | 2018 | 2019 | 2020 | 2021 | 2022 | 2023 | 2024 | 2025 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| Maximum (MW) | 4,633 | 4,717 | 5,269 | 4,676 | 5,146 | 5,066 | 4,459 | 4,226 | 4,757 | 4,679 | 4,607 |
+| Energy (GWh) | 21,444 | 22,013 | 22,386 | 22,291 | 21,931 | 20,927 | 19,805 | 20,175 | 19,287 | 19,685 | 19,872 |
+
+Source: `outputs/checks/check_annual_summary.csv` (notebook 01).
+
+### 1.2 When the lowest 1% of half hours occur (check)
 
 | Year | 2015 | 2016 | 2017 | 2018 | 2019 | 2020 | 2021 | 2022 | 2023 | 2024 | 2025 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | Starting 09:00 to 17:00 (%) | 0 | 0 | 0 | 0 | 0 | 0 | 19 | 27 | 97 | 99 | 100 |
 | Starting 00:00 to 06:00 (%) | 100 | 96 | 98 | 97 | 98 | 98 | 79 | 69 | 0 | 0 | 0 |
-| PV capacity at 30 June (MW) | 230 | 287 | 346 | 449 | 620 | 780 | 1,050 | 1,291 | 1,563 | 1,882 | 2,084 |
 
-The lowest 1% is about 170 half hours a year. Share of days on which the daytime trough is the
-lower of the two: 0% up to 2020, then 0.9%, 3.4%, 17.8%, 26.2% and 32.9% in 2021 to 2025.
+The lowest 1% is about 170 half hours a year; the remainder start outside both windows. Share of
+days on which the daytime trough is the lower of the two: 0% up to 2020, then 0.9%, 3.4%, 17.8%,
+26.2% and 32.9% in 2021 to 2025.
 
-Sources: `outputs/tables/fig2_data.csv` (notebook 04); `data/interim/pv_annual.parquet`;
-`outputs/checks/check_trough_windows.csv`.
+Sources: `outputs/checks/check_low_hours.csv` and `check_trough_windows.csv` (notebook 04).
 
-### 1.3 Each year's minimum (Table II)
+### 1.3 Each year's minimum (check)
 
 | Year | Minimum | Date | Half hour ending | Day | Public holiday | Solar (MJ/m²) | Tmax (°C) |
 |---|---|---|---|---|---|---|---|
@@ -104,11 +119,13 @@ Sources: `outputs/tables/fig2_data.csv` (notebook 04); `data/interim/pv_annual.p
 The minimum is overnight in every year to 2020 and in 2022, and in the daytime in 2021 and from
 2023. Times are local clock time.
 
-Source: `outputs/tables/table2.csv` (notebook 04).
+Source: `outputs/checks/check_annual_minima.csv` (notebook 04), which also holds each year's
+overnight and daytime lows.
 
-### 1.4 The annual daytime low fitted on PV capacity and on the year
+### 1.4 The annual daytime low fitted on PV capacity and on the year (Fig. 2)
 
 Two straight lines, each fitted on its own to the eleven annual daytime lows of 2015 to 2025.
+Fig. 2 plots the eleven points and the first line, with its R-squared.
 
 | Fitted on | Slope | R-squared | RMSE (MW) | Points |
 |---|---|---|---|---|
@@ -119,9 +136,9 @@ RMSE is the root mean squared residual of the eleven points, with no adjustment 
 fitted parameters. These are in-sample fits to annual values, not forecasts. Added after the
 scores were seen (D30).
 
-Source: `outputs/tables/table_pv_fit.csv` (notebook 04, section 6).
+Sources: `outputs/tables/table_pv_fit.csv` and `fig2_data.csv` (notebook 04, section 2).
 
-### 1.5 The daily daytime low against solar exposure (Fig. 4)
+### 1.5 The daily daytime low against solar exposure (Fig. 3)
 
 | Year | Slope (MW per MJ/m²) | Days |
 |---|---|---|
@@ -131,19 +148,9 @@ Source: `outputs/tables/table_pv_fit.csv` (notebook 04, section 6).
 
 A least-squares line of each day's daytime low on that day's solar exposure, within one year.
 
-Source: `outputs/tables/fig4_fits.csv` (notebook 04).
+Source: `outputs/tables/fig3_fits.csv` (notebook 04, section 3).
 
-### 1.6 The low end of the load duration curve (Fig. 3, optional)
-
-| Year | Minimum (MW) | Highest of the lowest 1% (MW) |
-|---|---|---|
-| 2015 | 1,368 | 1,465 |
-| 2020 | 1,429 | 1,523 |
-| 2025 | 880 | 1,236 |
-
-Source: notebook 04, section 3 (shown under the figure).
-
-## 2. Daily out-of-sample test (Table IV)
+## 2. Daily out-of-sample test (Table II)
 
 Added after the first scores were seen (D25). For each test year, each of M2 to M6 is fitted on
 the days up to the end of the year before (the same fits as the forecasts of section 3) and
@@ -183,7 +190,7 @@ days are almost all one-sided (MAE 339.5, mean error -336.8), as are M5's in 202
 -352.9): a tree model cannot follow PV capacity beyond the range it was fitted on (section 4.5), so
 part of the M5 against M6 gap is that handicap of M6 and not weather.
 
-Sources: `outputs/tables/table4.csv`; by year, `outputs/checks/daily_skill_by_year.csv` and
+Sources: `outputs/tables/table2.csv`; by year, `outputs/checks/daily_skill_by_year.csv` and
 `daily_pairs_by_year.csv` (notebook 08).
 
 ## 3. One-year-ahead POE scores (Table III)
@@ -195,7 +202,7 @@ points. Coverage is the share of actuals between POE90 and POE10; a calibrated b
 
 ### 3.1 Scores by model
 
-Daytime low, the target H1 and H2 are judged on:
+Table III: the daytime low, the target H1 and H2 are judged on.
 
 | Model | Annual pinball | Annual coverage | Monthly pinball | Monthly coverage |
 |---|---|---|---|---|
@@ -206,7 +213,8 @@ Daytime low, the target H1 and H2 are judged on:
 | M5 PV + weather, XGBoost | 28.5 | 5 of 7 | 42.8 | 0.69 |
 | M6 PV only, XGBoost | 36.6 | 6 of 7 | 75.1 | 0.52 |
 
-Whole-day minimum, the headline target:
+The same scores on the whole-day minimum, the headline target (a check, for the sentence in
+which the paper mentions them):
 
 | Model | Annual pinball | Annual coverage | Monthly pinball | Monthly coverage |
 |---|---|---|---|---|
@@ -221,7 +229,8 @@ Monthly scores are over 77 valid months for the daytime low and 76 for the whole
 of 84. M5 has the lowest pinball loss in all four columns. M2's band holds all seven annual
 actuals on both targets; in 2023 its band on the daytime low runs from about 620 to 1,370 MW.
 
-Source: `outputs/tables/table3.csv` (notebook 06), which also holds the loss at each POE level.
+Sources: `outputs/tables/table3.csv` for the daytime low and `outputs/checks/table3_minimum.csv`
+for the whole-day minimum (notebook 06). Both also hold the loss at each POE level.
 
 ### 3.2 The four comparisons
 
@@ -241,7 +250,7 @@ and on both targets.
 
 Source: `outputs/tables/headline_numbers.csv` (notebook 06).
 
-### 3.3 Annual daytime low: POE50 against the actual (Fig. 5)
+### 3.3 Annual daytime low: POE50 against the actual (Fig. 4)
 
 | Year | Actual | M2 | M3 | M4 | M5 |
 |---|---|---|---|---|---|
@@ -271,11 +280,6 @@ M4's annual forecasts sit too low (section 4.4). M6's monthly forecasts of the d
 beyond its training range, which is the handicap noted in section 2.2.
 
 Source: `outputs/checks/check_poe50_bias.csv` (notebook 06).
-
-### 3.5 Monthly scores by calendar month (Fig. 6, optional)
-
-Mean pinball loss of the monthly daytime-low forecasts by calendar month, for all six models, is
-in `outputs/tables/fig6_data.csv`. Each calendar month has at most seven test points.
 
 ## 4. Sensitivity
 

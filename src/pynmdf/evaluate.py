@@ -217,7 +217,7 @@ def poe50_bias(forecasts: pd.DataFrame, by: list[str]) -> pd.Series:
 
 
 def score_table(forecasts: pd.DataFrame, target: str) -> pd.DataFrame:
-    """Return Table III for one target: every model's scores, annual beside monthly.
+    """Return the table of POE scores for one target: every model, annual beside monthly.
 
     Returns:
         One row per model. Columns are the outputs of ``score`` prefixed by ``annual_`` and by
@@ -508,7 +508,7 @@ def compare_daily(errors: pd.DataFrame, pairs: dict, by: tuple[str, ...] = ()) -
 
 
 def daily_table(errors: pd.DataFrame, pairs: dict) -> pd.DataFrame:
-    """Return Table IV: the daily skill of each model, then the pairs, for both sets of days.
+    """Return the table of the daily test: each model's skill, then the pairs, for both day sets.
 
     Args:
         errors: The output of ``daily_errors``.

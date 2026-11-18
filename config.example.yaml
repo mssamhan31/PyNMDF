@@ -115,8 +115,8 @@ evaluation:
   lowest_days_share: 0.10     # daily comparison (notebook 08): this share of each year's days, lowest by actual, is also scored on its own
 
 figures:
-  low_share: 0.01             # Fig. 2 and Fig. 3 show this share of each year's lowest half hours
-  selected_years: [2015, 2020, 2025]   # Fig. 3 and Fig. 4
+  low_share: 0.01             # the lowest half hours: this share of each year's, for the low-hours check
+  selected_years: [2015, 2020, 2025]   # the years drawn in Fig. 3 (daily daytime low against solar exposure)
 
 checks:
   sign_check_intervals: 200   # lowest daytime 15-minute intervals per file used by the sign check

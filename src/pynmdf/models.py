@@ -52,7 +52,7 @@ M4_VARIANTS = {
 # only ever added at the end: adding one must not change the draws of another.
 SPECS = MODELS | M4_VARIANTS
 
-# Short labels for Table I.
+# Short labels for the paper's table of models.
 MODEL_INFO = pd.DataFrame(
     [
         ("M1", "Naive", "Annual or monthly values", "No", "No", "Past errors"),
