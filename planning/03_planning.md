@@ -14,7 +14,7 @@ says which step is in hand.
 | 3 | Restructure: move files to the layout in the spec; no change of logic | Done, 24 November 2026 | [plan/01_archive_and_restructure.md](plan/01_archive_and_restructure.md) |
 | 4 | Revise M4: maximum and minimum temperature each as a V | Done, 24 November 2026 | [plan/02_piecewise_m4.md](plan/02_piecewise_m4.md) |
 | 5 | Tidy for publication, then the review gate | Done, 24 November 2026 | [plan/03_tidy_and_go_public.md](plan/03_tidy_and_go_public.md) |
-| 6 | Go public | To do, on the author's decision | [plan/03_tidy_and_go_public.md](plan/03_tidy_and_go_public.md) |
+| 6 | Go public | Done, 24 November 2026 | [plan/03_tidy_and_go_public.md](plan/03_tidy_and_go_public.md) |
 
 ## Why this order
 

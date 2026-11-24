@@ -5,16 +5,18 @@ The log gains one entry per finished step, newest first.
 
 ## Now (24 November 2026)
 
-- **Step in hand:** step 6 of the [plan](03_planning.md), go public, on the author's
-  instruction of 24 November 2026.
+- **Step in hand:** none. All six steps of the [plan](03_planning.md) are done; what is left
+  is in its backlog.
+- **Public:** <https://github.com/mssamhan31/PyNMDF>, since 24 November 2026.
 - **Done:** step 1 (planning documents and `AGENTS.md`), step 2 (archive of the first
-  version), step 3 (restructure), step 4 (M4 revised) and step 5 (tidy and review gate).
+  version), step 3 (restructure), step 4 (M4 revised), step 5 (tidy and review gate) and
+  step 6 (public).
 - **Review gate:** publishable, with no blocker. Its questions are answered and its findings
   are fixed, except the continuous integration workflow, which stays in the backlog.
-- **Branch:** `main`. The work of 24 November 2026 was done on `piecewise-m4-and-restructure`
-  and merged.
+- **Branch:** `main`, pushed to `origin`. The work of 24 November 2026 was done on
+  `piecewise-m4-and-restructure` and merged.
 - **Tag:** `conference-v1-straight-line-m4` on `71c3cb3`, the commit the first results came
-  from.
+  from. Pushed.
 - **Results:** in `publication/01_conference/results`, committed, with M4 taking maximum and
   minimum temperature each as a V. Every number of M1, M2, M3, M5 and M6 is identical to the
   archived copy.
@@ -39,6 +41,15 @@ Decided on 24 November 2026, after the review:
 - The name is "Python for Network Minimum Demand Forecasting".
 
 ## Log
+
+### 24 November 2026: public
+
+- The red-flag scan was run again on `main` before the push: no secret, no local path, no
+  private data.
+- Created the public repository <https://github.com/mssamhan31/PyNMDF> and pushed `main` and
+  the tag `conference-v1-straight-line-m4`.
+- Next, from the backlog: a tag on the submitted state of the paper, and a release archived
+  on Zenodo.
 
 ### 24 November 2026: review follow-ups
 

@@ -34,7 +34,8 @@ The author's decision, given on 24 November 2026.
 - [x] The contributors list for the README is supplied.
 - [x] `planning/` is published in full, and the open items on the status page are cleared.
 - [x] The work branch is merged into `main`.
-- [ ] The repository is created on GitHub and `main` and the tag are pushed.
+- [x] The repository is created on GitHub and `main` and the tag are pushed:
+      <https://github.com/mssamhan31/PyNMDF>.
 
 After going public, both in the backlog: a tag on the submitted state of the paper, on the
 day it is submitted; and a release archived on Zenodo.
