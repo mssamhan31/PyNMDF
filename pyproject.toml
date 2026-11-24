@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pynmdf"
 version = "0.1.0"
-description = "Analysis code for a conference paper on minimum demand forecasting"
+description = "Reproducible analysis code for research on network minimum demand forecasting"
 requires-python = ">=3.11"
 
 [tool.setuptools.packages.find]

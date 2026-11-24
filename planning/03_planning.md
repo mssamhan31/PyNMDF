@@ -13,7 +13,7 @@ says which step is in hand.
 | 2 | Archive the current version: results and code as they stand, and a tag | Done, 24 November 2026 | [plan/01_archive_and_restructure.md](plan/01_archive_and_restructure.md) |
 | 3 | Restructure: move files to the layout in the spec; no change of logic | Done, 24 November 2026 | [plan/01_archive_and_restructure.md](plan/01_archive_and_restructure.md) |
 | 4 | Revise M4: maximum and minimum temperature each as a V | Done, 24 November 2026 | [plan/02_piecewise_m4.md](plan/02_piecewise_m4.md) |
-| 5 | Tidy for publication, then the review gate | To do | [plan/03_tidy_and_go_public.md](plan/03_tidy_and_go_public.md) |
+| 5 | Tidy for publication, then the review gate | Done, 24 November 2026 | [plan/03_tidy_and_go_public.md](plan/03_tidy_and_go_public.md) |
 | 6 | Go public | To do, on the author's decision | [plan/03_tidy_and_go_public.md](plan/03_tidy_and_go_public.md) |
 
 ## Why this order
@@ -36,7 +36,9 @@ Not planned in detail and not started. Each is taken up only when it is needed.
 | Item | Note |
 |---|---|
 | A website for the repository | Pages in `docs/`, as in PyNRPF |
-| A continuous integration workflow | Tests and linter on every push |
+| A continuous integration workflow | Tests and linter on every push. Raised by the review of 24 November 2026 |
+| Abbreviations expanded on first use | Mainly PV and POE, in the notebooks, the results summary and three module headers. Raised by the review |
+| A runtime line in each notebook's first cell | Nine of ten lack one. Raised by the review |
 | A citation file | When the paper has a citation |
 | A changelog | When there is a release to describe |
 | An installable library with a public interface | Only if others need to call the code |

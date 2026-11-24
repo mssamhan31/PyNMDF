@@ -12,8 +12,7 @@ Other notes in this folder:
 | `substation_set_decisions.md` | Why the substation set changes by year and why poor-data substations are dropped |
 | `public_cross_check.md` | The network total against public Ausgrid figures (about 80% of the whole network) |
 
-Paper documents (plan, scope, skeleton) are kept outside this repository, in the author's
-`09_AI Artifacts\PyNMDF` folder.
+Paper documents (plan, scope, skeleton) are kept outside this repository.
 
 ## 11 November 2026: scope and data
 
@@ -245,7 +244,7 @@ The four points the paper makes, strongest first:
 Paper numbering now differs from the repository names (paper Fig. 3 is `fig4`, Fig. 4 is `fig5`,
 Fig. 5 is `fig6`; paper Table III is `table4.csv`, Table IV is `table3.csv`). The map is in
 Appendix A14 of the prewriting plan. Paper plan v8, scope plan v6 and the skeleton
-`PyNMDF_skeleton_20261118.docx` are in `09_AI Artifacts\PyNMDF`.
+`PyNMDF_skeleton_20261118.docx` are kept outside this repository.
 
 ## 18 November 2026: figure and table set revised
 

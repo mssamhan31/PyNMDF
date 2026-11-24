@@ -5,9 +5,11 @@ The log gains one entry per finished step, newest first.
 
 ## Now (24 November 2026)
 
-- **Step in hand:** step 5 of the [plan](03_planning.md), tidy for publication.
+- **Step in hand:** step 6 of the [plan](03_planning.md), go public. It is the author's
+  decision and the author's action.
 - **Done:** step 1 (planning documents and `AGENTS.md`), step 2 (archive of the first
-  version), step 3 (restructure) and step 4 (M4 revised).
+  version), step 3 (restructure), step 4 (M4 revised) and step 5 (tidy and review gate).
+- **Review gate:** publishable, with no blocker. The findings are in the open items below.
 - **Branch:** `piecewise-m4-and-restructure`, cut from `main` at `71c3cb3`. There is no remote;
   nothing has been pushed.
 - **Tag:** `conference-v1-straight-line-m4` on `71c3cb3`, the commit the first results came
@@ -18,19 +20,32 @@ The log gains one entry per finished step, newest first.
 
 ### Where the repository differs from the spec
 
-| Spec says | Today | Closed by |
-|---|---|---|
-| `LICENSE`, a front-page README and a README per publication | No licence; one long README | Step 5 |
+Nowhere.
 
 ## Open items
 
 | Item | Needed for |
 |---|---|
-| The contributors list for the README | Step 5 |
 | Whether the conference review is double-blind | Step 6 |
 | Whether the plan and status pages are published with the rest of `planning/` | Step 6 |
+| Whether the wording "on the supervisor's advice" (D37 and four other places) is to be published | Step 6 |
+| Whether the three notes and the analysis plan, which record working discussions, are published as they stand | Step 6 |
+| The name: "Forecasting" here, "Forecast" in the author's register of repositories | Step 6 |
+| Review, should fix: abbreviations not expanded on first use (mainly PV and POE) in the notebooks, the results summary and three module headers | Backlog |
+| Review, should fix: no approximate runtime in the first cell of nine notebooks | Backlog |
 
 ## Log
+
+### 24 November 2026: tidied and reviewed
+
+- Added `LICENSE` (MIT) and `publication/01_conference/README.md`, which takes the detail
+  that was in the root README.
+- The root README is now a front page: the problem, a quick start, the layout, the data and
+  its credit lines, tests, licence, acknowledgements and contributors.
+- Package description brought up to date; a local folder name removed from the decision log.
+- Review gate run with the `repo-review` skill: no secret, no local path, no private data.
+  Verdict: publishable, no blocker. Four should-fix findings and two questions for the
+  author are carried in the open items above and in the backlog.
 
 ### 24 November 2026: M4 revised
 

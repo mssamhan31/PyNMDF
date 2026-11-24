@@ -3,11 +3,6 @@
 What the repository holds and the rules it follows. This page is the overview; each component
 has a short detail page under [spec/](spec/), to be read only when needed.
 
-> **Not yet true.** This spec describes the repository after step 5 of the
-> [plan](03_planning.md). One thing differs today: there is no `LICENSE` and no README for the
-> publication folder yet. The [status](99_status.md) tracks the gap. This note is removed when
-> the gap closes.
-
 ## Layout
 
 ```

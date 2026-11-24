@@ -3,8 +3,8 @@
 Guidance for coding agents working in this repository.
 
 PyNMDF (Python for Network Minimum Demand Forecasting) is the reproducible analysis code behind
-research on forecasting minimum demand in distribution networks as rooftop PV grows. It holds
-one shared package and one folder per publication.
+research on forecasting minimum demand in distribution networks as rooftop photovoltaic (PV)
+capacity grows. It holds one shared package and one folder per publication.
 
 ## Start here
 
@@ -59,9 +59,9 @@ Notebooks need the raw files and a `config.local.yaml`; see the README. Tests ne
 
 The package is read in the order of the analysis: `io_demand`, `io_pv`, `io_weather` (read the
 public files), `clean` (the network total), `targets` (what is forecast), `models` (M2 to M6),
-`poe` (POE levels), `evaluate` (backtest and scores), `plots` (figures). `config` loads the one
-YAML file that holds every decision parameter. Notebooks only call the package, show results
-and save outputs.
+`poe` (probability of exceedance, POE, levels), `evaluate` (backtest and scores), `plots`
+(figures). `config` loads the one YAML file that holds every decision parameter. Notebooks only
+call the package, show results and save outputs.
 
 ## Conventions
 
