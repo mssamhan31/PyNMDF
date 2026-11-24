@@ -6,16 +6,18 @@ each one measures. It does not interpret them for the paper.
 
 Paths are relative to this folder, `publication/01_conference/`.
 
-Conventions: demand is in MW. An error is actual minus forecast, so a positive mean error means
+Conventions: demand is in MW. MAE is the mean absolute error and RMSE the root mean squared
+error. An error is actual minus forecast, so a positive mean error means
 the forecasts sat too low. In a comparison of two models, a negative change means the first model
 scores better. Test years are 2019 to 2025; each is forecast from data up to the end of the year
-before, with the target year's PV capacity taken as known.
+before, with the target year's rooftop photovoltaic (PV)
+capacity taken as known.
 
 ## 0. Reading guide
 
 The paper has four figures and three tables. Fig. 1 is the two annual lows over PV capacity;
 Fig. 2 the annual daytime low against PV capacity; Fig. 3 the daily daytime low against solar
-exposure; Fig. 4 the POE bands on the annual daytime low. Table I lists the six models; Table II
+exposure; Fig. 4 the probability of exceedance (POE) bands on the annual daytime low. Table I lists the six models; Table II
 is the daily out-of-sample test; Table III holds the one-year-ahead POE scores on the daytime
 low. Numbers the paper states in a sentence, without a figure or table, come from the checks
 named beside them.

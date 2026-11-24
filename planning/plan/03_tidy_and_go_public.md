@@ -28,13 +28,16 @@ fixed here. Anything else it raises goes to the backlog or is dropped.
 
 ## Step 6: go public
 
-The author's decision and the author's actions. Before the switch:
+The author's decision, given on 24 November 2026.
 
-- [ ] The review gate has passed.
-- [ ] The contributors list for the README is supplied.
-- [ ] If the conference review is double-blind, the switch waits until it no longer matters.
-- [ ] The submitted state of the paper is tagged.
-- [ ] The repository is created on GitHub and the branch is merged and pushed.
+- [x] The review gate has passed: publishable, no blocker.
+- [x] The contributors list for the README is supplied.
+- [x] `planning/` is published in full, and the open items on the status page are cleared.
+- [x] The work branch is merged into `main`.
+- [ ] The repository is created on GitHub and `main` and the tag are pushed.
+
+After going public, both in the backlog: a tag on the submitted state of the paper, on the
+day it is submitted; and a release archived on Zenodo.
 
 ## Done when
 

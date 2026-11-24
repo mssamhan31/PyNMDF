@@ -5,13 +5,14 @@ The log gains one entry per finished step, newest first.
 
 ## Now (24 November 2026)
 
-- **Step in hand:** step 6 of the [plan](03_planning.md), go public. It is the author's
-  decision and the author's action.
+- **Step in hand:** step 6 of the [plan](03_planning.md), go public, on the author's
+  instruction of 24 November 2026.
 - **Done:** step 1 (planning documents and `AGENTS.md`), step 2 (archive of the first
   version), step 3 (restructure), step 4 (M4 revised) and step 5 (tidy and review gate).
-- **Review gate:** publishable, with no blocker. The findings are in the open items below.
-- **Branch:** `piecewise-m4-and-restructure`, cut from `main` at `71c3cb3`. There is no remote;
-  nothing has been pushed.
+- **Review gate:** publishable, with no blocker. Its questions are answered and its findings
+  are fixed, except the continuous integration workflow, which stays in the backlog.
+- **Branch:** `main`. The work of 24 November 2026 was done on `piecewise-m4-and-restructure`
+  and merged.
 - **Tag:** `conference-v1-straight-line-m4` on `71c3cb3`, the commit the first results came
   from.
 - **Results:** in `publication/01_conference/results`, committed, with M4 taking maximum and
@@ -24,17 +25,31 @@ Nowhere.
 
 ## Open items
 
-| Item | Needed for |
-|---|---|
-| Whether the conference review is double-blind | Step 6 |
-| Whether the plan and status pages are published with the rest of `planning/` | Step 6 |
-| Whether the wording "on the supervisor's advice" (D37 and four other places) is to be published | Step 6 |
-| Whether the three notes and the analysis plan, which record working discussions, are published as they stand | Step 6 |
-| The name: "Forecasting" here, "Forecast" in the author's register of repositories | Step 6 |
-| Review, should fix: abbreviations not expanded on first use (mainly PV and POE) in the notebooks, the results summary and three module headers | Backlog |
-| Review, should fix: no approximate runtime in the first cell of nine notebooks | Backlog |
+None.
+
+Decided on 24 November 2026, after the review:
+
+- `planning/` is published in full, the plan and status pages included.
+- The repository goes public now. Whether the paper's review is blind is not a concern.
+- The submitted state of the paper is tagged on the day it is submitted. A release is
+  archived on Zenodo later.
+- The wording "on the supervisor's advice" is published as it stands.
+- The three notes and the analysis plan are published as they stand. The root README carries
+  a statement on the use of AI.
+- The name is "Python for Network Minimum Demand Forecasting".
 
 ## Log
+
+### 24 November 2026: review follow-ups
+
+- The root README has a section on the use of AI: what the assistants did, and that the
+  intent, the judgement, the taste and the accountability are the author's.
+- Abbreviations are expanded on first use in the eight notebooks, the two exploration
+  notebooks, the conference README, the results summary and four module headers. The one left,
+  NSW in the root README, sits inside the sponsor acknowledgement, which is kept verbatim.
+- The first cell of each of the eight notebooks states its approximate runtime, as measured on
+  24 November 2026. The two exploration notebooks were not timed and have no such line.
+- Text only: no code path and no result changed. 12 tests pass.
 
 ### 24 November 2026: tidied and reviewed
 

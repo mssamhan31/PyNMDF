@@ -3,7 +3,7 @@
 Every model forecasts each test year from data up to the end of the year before (the origin):
 train 2015 to 2018 and test 2019, then extend one year at a time. ``rolling_origin`` is the only
 place that makes forecasts, so nothing after an origin can reach a forecast made from it. The one
-exception is by design: PV capacity of the target year is taken as known.
+exception is by design: rooftop photovoltaic (PV) capacity of the target year is taken as known.
 
 Errors and misses are always actual minus predicted.
 """

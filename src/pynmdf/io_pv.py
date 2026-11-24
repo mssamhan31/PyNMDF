@@ -1,4 +1,4 @@
-"""Read rooftop PV capacity from Ausgrid's "average electricity use" workbooks.
+"""Read rooftop photovoltaic (PV) capacity from Ausgrid's "average electricity use" workbooks.
 
 Ausgrid publishes one workbook per financial year with a row per local government area and a
 network "Total" row. Among its columns is the solar generation capacity (kWp) recorded as

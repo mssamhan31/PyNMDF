@@ -2,12 +2,12 @@
 
 Everything behind a four-page conference paper on minimum demand forecasting.
 
-**Question.** Once rooftop PV capacity is in the model, does weather improve one-year-ahead
+**Question.** Once rooftop photovoltaic (PV) capacity is in the model, does weather improve one-year-ahead
 probabilistic forecasts of annual minimum demand?
 
 **Case study.** One Ausgrid network total (the sum of the public zone substations, at 30 minutes)
 for calendar years 2015 to 2025, with five simple models compared under one rolling-origin
-protocol at POE10, POE50 and POE90, and a sixth added afterwards as a supplementary check. All
+protocol at three probability of exceedance (POE) levels, POE10, POE50 and POE90, and a sixth added afterwards as a supplementary check. All
 inputs are public.
 
 Paths on this page are relative to this folder. Commands are run from the repository root.
@@ -169,7 +169,8 @@ intervals where less than 95% of usual load reports; average to half hours. The 
 joined and cut to 2015 to 2025. The cleaning follows Haghdadi et al. (2018),
 <https://doi.org/10.1109/TSTE.2017.2751647>.
 
-Times are local clock time (AEST or AEDT), as Ausgrid publishes them. Series are indexed by
+Times are local clock time (Australian Eastern Standard Time, AEST, or Australian Eastern
+Daylight Time, AEDT), as Ausgrid publishes them. Series are indexed by
 interval start; tables report the time an interval ends, matching Ausgrid's column labels.
 
 Three properties of the published files are measured but not corrected; see section 3 of the

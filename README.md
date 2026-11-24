@@ -146,3 +146,14 @@ Innovation Hub (NSW Decarb Hub).
 - Baran Yildiz (SPREE, UNSW)
 
 SPREE is the School of Photovoltaic and Renewable Energy Engineering.
+
+## Use of AI
+
+AI assistants were used throughout this repository: Claude, by Anthropic, in chat and through
+Claude Code. They helped to brainstorm, to write and review the code and its tests, to run the
+analysis and to draft the documentation. The notes under `publication/01_conference/notes` and
+the analysis plan record that work as it happened.
+
+The intent, the judgement, the taste and the accountability are the author's. The author set
+the research question and the method, made the decisions recorded here, reviewed the
+AI-generated output, and remains accountable for everything in this repository.

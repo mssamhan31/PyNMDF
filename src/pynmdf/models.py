@@ -5,7 +5,7 @@ minimum is the lower of the two. All are fitted on the same days and differ only
 given. M2 to M5 are a nested ladder, each step changing one thing:
 
 - M2 Time trend: calendar (month, non-working day) and time, with a slope per month.
-- M3 PV only: as M2, with PV capacity in place of time.
+- M3 PV only: as M2, with rooftop photovoltaic (PV) capacity in place of time.
 - M4 PV + weather: M3 plus PV x solar exposure, and maximum and minimum temperature each as a V.
 - M5 PV + weather (XGBoost): the same information as M4, in a tree model.
 

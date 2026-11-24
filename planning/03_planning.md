@@ -37,8 +37,8 @@ Not planned in detail and not started. Each is taken up only when it is needed.
 |---|---|
 | A website for the repository | Pages in `docs/`, as in PyNRPF |
 | A continuous integration workflow | Tests and linter on every push. Raised by the review of 24 November 2026 |
-| Abbreviations expanded on first use | Mainly PV and POE, in the notebooks, the results summary and three module headers. Raised by the review |
-| A runtime line in each notebook's first cell | Nine of ten lack one. Raised by the review |
+| A tag on the submitted state of the paper | On the day the paper is submitted |
+| A release archived on Zenodo | Later; it gives the repository a DOI to cite |
 | A citation file | When the paper has a citation |
 | A changelog | When there is a release to describe |
 | An installable library with a public interface | Only if others need to call the code |
