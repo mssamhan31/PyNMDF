@@ -10,7 +10,7 @@ says which step is in hand.
 |---|---|---|---|
 | 0 | Build the conference analysis: eight notebooks, six models, results summary | Done, 18 November 2026 | `publication/01_conference/analysis_plan.md` (today at `docs/analysis_plan.md`) |
 | 1 | Write the planning documents and `AGENTS.md` | Done, 24 November 2026 | this folder |
-| 2 | Archive the current version: results and code as they stand, and a tag | To do | [plan/01_archive_and_restructure.md](plan/01_archive_and_restructure.md) |
+| 2 | Archive the current version: results and code as they stand, and a tag | Done, 24 November 2026 | [plan/01_archive_and_restructure.md](plan/01_archive_and_restructure.md) |
 | 3 | Restructure: move files to the layout in the spec; no change of logic | To do | [plan/01_archive_and_restructure.md](plan/01_archive_and_restructure.md) |
 | 4 | Revise M4 and M5: mean temperature as a V in M4, raw mean temperature in M5 | To do | [plan/02_piecewise_m4.md](plan/02_piecewise_m4.md) |
 | 5 | Tidy for publication, then the review gate | To do | [plan/03_tidy_and_go_public.md](plan/03_tidy_and_go_public.md) |

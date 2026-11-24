@@ -14,12 +14,15 @@ requires-python = ">=3.11"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+# A publication's archive folder is a frozen record of earlier code: never linted or reformatted.
 [tool.black]
 line-length = 100
+extend-exclude = '/publication/[^/]+/archive/'
 
 [tool.ruff]
 line-length = 100
 src = ["src"]
+extend-exclude = ["publication/*/archive"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "W"]
