@@ -31,7 +31,8 @@ named beside them.
 
 Numbers that qualify a point are stated beside it: section 3.2 for point 2 (one year ahead, on
 POE scores, M3 against M2 goes the other way on the annual targets), and section 3.4 for point 4
-(part of M5's margin over M6 is a handicap of M6, not weather).
+(part of M5's margin over M6 is a handicap of M6, not weather). Section 3.2 also bears on the
+second half of point 4: on the monthly daytime low, M4 scores better than M3.
 
 ### 0.2 What was fixed before the results, and what was added after
 
@@ -44,9 +45,10 @@ POE scores, M3 against M2 goes the other way on the annual targets), and section
 | After the first run of the models, before any score | One non-working-day flag in place of separate weekend and holiday flags; M5 kept as plain XGBoost | D19, D20 |
 | **After the scores of M1 to M5 were seen** | **M6** (XGBoost with M3's information) and the supplementary comparison M5 against M6 | D23 |
 | **After the scores were seen** | **Notebook 08**, the daily out-of-sample test, and its three pairs | D25 |
+| **After the scores were seen** | **The form of temperature in M4**: maximum and minimum temperature each as a V, in place of one straight term each, on the supervisor's advice. The knots were chosen on 2015 to 2018 only | D37 |
 | After the scores were seen | The diagnosis of M4 (M4 itself unchanged); the method of the rescaling; the straight-line fit of section 1.4 and Fig. 2; the fourth panel (M5) of Fig. 4 | D24, D22, D30, D27, D34 |
 
-### 0.3 Three things to keep in view
+### 0.3 Four things to keep in view
 
 - **Seven annual points.** The annual one-year-ahead scores of section 3 rest on seven test years.
   The monthly scores rest on 77 months (daytime low) or 76 (whole-day minimum).
@@ -54,6 +56,10 @@ POE scores, M3 against M2 goes the other way on the annual targets), and section
   day's actual weather. Their pairs measure how much weather explains, not how much it helps a year
   ahead. M3 against M2 uses no weather and is a one-year-ahead test.
 - **M6 and notebook 08 are supplementary.** Neither was planned before the results.
+- **H2 is judged on a revised M4.** H2 was set as M4 against M3 before any model was run. The
+  form of temperature in M4 was revised after the scores were seen (D37), so every number of M4
+  here is that of the revised model. The numbers of the first M4 are in
+  `archive/v1_straight_line_m4`. No other model changed.
 
 ## 1. Descriptive evidence
 
@@ -168,7 +174,7 @@ year's valid days with the lowest actual daytime low, 240 in all.
 |---|---|---|---|---|
 | M2 Time trend | 274.1 | -115.1 | 292.4 | -286.4 |
 | M3 PV only | 260.3 | -13.1 | 211.7 | -168.9 |
-| M4 PV + weather, linear | 227.1 | -18.7 | 169.2 | -91.2 |
+| M4 PV + weather, linear | 186.1 | -25.1 | 152.6 | -55.7 |
 | M5 PV + weather, XGBoost | 157.4 | +32.6 | 173.1 | -157.3 |
 | M6 PV only, XGBoost | 262.3 | -10.3 | 339.5 | -336.8 |
 
@@ -182,12 +188,12 @@ measure bias.
 |---|---|---|---|---|---|---|
 | M3 against M2 | PV against time; one year ahead | All | 260.3 | 274.1 | -5.0% | 4 of 7 |
 | M3 against M2 | | Lowest 10% | 211.7 | 292.4 | -27.6% | 7 of 7 |
-| M4 against M3 | What weather explains, linear | All | 227.1 | 260.3 | -12.8% | 7 of 7 |
-| M4 against M3 | | Lowest 10% | 169.2 | 211.7 | -20.1% | 6 of 7 |
+| M4 against M3 | What weather explains, linear | All | 186.1 | 260.3 | -28.5% | 7 of 7 |
+| M4 against M3 | | Lowest 10% | 152.6 | 211.7 | -27.9% | 6 of 7 |
 | M5 against M6 | What weather explains, XGBoost | All | 157.4 | 262.3 | -40.0% | 7 of 7 |
 | M5 against M6 | | Lowest 10% | 173.1 | 339.5 | -49.0% | 7 of 7 |
 
-The exception for M4 against M3 on the lowest days is 2022 (+16.1%). M6's errors on the lowest
+The exception for M4 against M3 on the lowest days is 2022 (+17.9%). M6's errors on the lowest
 days are almost all one-sided (MAE 339.5, mean error -336.8), as are M5's in 2023 (352.9 and
 -352.9): a tree model cannot follow PV capacity beyond the range it was fitted on (section 4.5), so
 part of the M5 against M6 gap is that handicap of M6 and not weather.
@@ -211,7 +217,7 @@ Table III: the daytime low, the target H1 and H2 are judged on.
 | M1 Naive | 63.1 | 3 of 7 | 50.5 | 0.61 |
 | M2 Time trend | 34.6 | 7 of 7 | 53.5 | 0.70 |
 | M3 PV only | 43.3 | 5 of 7 | 49.6 | 0.58 |
-| M4 PV + weather, linear | 63.5 | 4 of 7 | 51.8 | 0.64 |
+| M4 PV + weather, linear | 67.5 | 4 of 7 | 46.2 | 0.70 |
 | M5 PV + weather, XGBoost | 28.5 | 5 of 7 | 42.8 | 0.69 |
 | M6 PV only, XGBoost | 36.6 | 6 of 7 | 75.1 | 0.52 |
 
@@ -223,7 +229,7 @@ which the paper mentions them):
 | M1 Naive | 45.2 | 1 of 7 | 43.5 | 0.42 |
 | M2 Time trend | 31.1 | 7 of 7 | 37.5 | 0.66 |
 | M3 PV only | 41.6 | 5 of 7 | 41.4 | 0.58 |
-| M4 PV + weather, linear | 60.0 | 4 of 7 | 44.1 | 0.63 |
+| M4 PV + weather, linear | 61.5 | 4 of 7 | 41.5 | 0.62 |
 | M5 PV + weather, XGBoost | 26.9 | 5 of 7 | 32.5 | 0.63 |
 | M6 PV only, XGBoost | 28.0 | 6 of 7 | 42.2 | 0.63 |
 
@@ -241,14 +247,16 @@ Change in mean pinball loss, in per cent.
 | Comparison | Set | Daytime low, annual | Daytime low, monthly | Minimum, annual | Minimum, monthly |
 |---|---|---|---|---|---|
 | H1: M3 against M2 (PV against time) | Before the results | +25.0 | -7.4 | +34.1 | +10.3 |
-| H2: M4 against M3 (weather on top of PV, linear) | Before the results | +46.7 | +4.5 | +44.2 | +6.6 |
-| Model form: M5 against M4 (XGBoost against linear) | Before the results | -55.1 | -17.3 | -55.2 | -26.3 |
+| H2: M4 against M3 (weather on top of PV, linear) | Before the results | +56.0 | -6.9 | +47.7 | +0.2 |
+| Model form: M5 against M4 (XGBoost against linear) | Before the results | -57.8 | -7.2 | -56.2 | -21.6 |
 | Supplementary: M5 against M6 (weather in tree form) | After the scores were seen | -22.2 | -43.0 | -4.0 | -23.0 |
 
 On the target the hypotheses are judged on, M3 scores worse than M2 on the annual daytime low
 (43.3 against 34.6 MW) and better on the monthly (49.6 against 53.5 MW). M4 scores worse than M3
-at both levels and on both targets. M5 scores better than M4 and better than M6 at both levels
-and on both targets.
+on both annual targets (67.5 against 43.3 MW on the daytime low) and better on the monthly
+daytime low (46.2 against 49.6 MW); on the monthly whole-day minimum the two are level (41.5
+against 41.4 MW). M5 scores better than M4 and better than M6 at both levels and on both
+targets.
 
 Source: `results/tables/headline_numbers.csv` (notebook 06).
 
@@ -256,13 +264,13 @@ Source: `results/tables/headline_numbers.csv` (notebook 06).
 
 | Year | Actual | M2 | M3 | M4 | M5 |
 |---|---|---|---|---|---|
-| 2019 | 1,759 | 1,789 | 1,782 | 1,721 | 1,810 |
-| 2020 | 1,671 | 1,738 | 1,639 | 1,576 | 1,680 |
-| 2021 | 1,357 | 1,584 | 1,426 | 1,307 | 1,410 |
-| 2022 | 1,458 | 1,323 | 1,110 | 999 | 1,293 |
-| 2023 | 1,080 | 1,251 | 1,016 | 921 | 1,332 |
-| 2024 | 1,019 | 1,049 | 875 | 757 | 994 |
-| 2025 | 880 | 925 | 839 | 683 | 881 |
+| 2019 | 1,759 | 1,789 | 1,782 | 1,728 | 1,810 |
+| 2020 | 1,671 | 1,738 | 1,639 | 1,553 | 1,680 |
+| 2021 | 1,357 | 1,584 | 1,426 | 1,295 | 1,410 |
+| 2022 | 1,458 | 1,323 | 1,110 | 994 | 1,293 |
+| 2023 | 1,080 | 1,251 | 1,016 | 915 | 1,332 |
+| 2024 | 1,019 | 1,049 | 875 | 740 | 994 |
+| 2025 | 880 | 925 | 839 | 650 | 881 |
 
 Source: `data/interim/forecasts.parquet`; the bands are shown under the figure in notebook 06.
 
@@ -272,9 +280,9 @@ Mean error of POE50 over the valid test points (MW).
 
 | Target, level | M1 | M2 | M3 | M4 | M5 | M6 |
 |---|---|---|---|---|---|---|
-| Daytime low, annual | -126 | -62 | +77 | +180 | -25 | -49 |
-| Daytime low, monthly | -90 | -140 | -34 | +40 | -61 | -132 |
-| Minimum, annual | -101 | -65 | +54 | +142 | 0 | -41 |
+| Daytime low, annual | -126 | -62 | +77 | +193 | -25 | -49 |
+| Daytime low, monthly | -90 | -140 | -34 | +32 | -61 | -132 |
+| Minimum, annual | -101 | -65 | +54 | +162 | 0 | -41 |
 | Minimum, monthly | -75 | -86 | -34 | +16 | -8 | -34 |
 
 M4's annual forecasts sit too low (section 4.4). M6's monthly forecasts of the daytime low sit
@@ -295,18 +303,20 @@ in a month), over complete days.
 | M1 | 36.9 | 2 of 7 | 40.5 | 0.41 |
 | M2 | 25.8 | 7 of 7 | 34.4 | 0.68 |
 | M3 | 31.9 | 5 of 7 | 39.3 | 0.57 |
-| M4 | 35.9 | 4 of 7 | 41.1 | 0.62 |
+| M4 | 36.5 | 4 of 7 | 38.4 | 0.59 |
 | M5 | 25.5 | 4 of 7 | 30.2 | 0.58 |
 | M6 | 30.5 | 5 of 7 | 39.6 | 0.67 |
 
 | Comparison | Annual, minimum | Annual, 15 lowest days | Monthly, minimum | Monthly, 15 lowest days |
 |---|---|---|---|---|
 | H1: M3 against M2 | +34.1 | +23.3 | +10.3 | +14.3 |
-| H2: M4 against M3 | +44.2 | +12.6 | +6.6 | +4.7 |
-| Model form: M5 against M4 | -55.2 | -29.0 | -26.3 | -26.5 |
+| H2: M4 against M3 | +47.7 | +14.5 | +0.2 | -2.4 |
+| Model form: M5 against M4 | -56.2 | -30.2 | -21.6 | -21.2 |
 | Supplementary: M5 against M6 | -4.0 | -16.6 | -23.0 | -23.7 |
 
-All four comparisons point the same way on both measures, at both levels. Complete days per year,
+Three of the four comparisons point the same way on both measures, at both levels. H2 does so at
+the annual level; at the monthly level it is within 3% of zero on both measures and changes
+sign between them. Complete days per year,
 2015 to 2025: 357, 361, 360, 365, 353, 347, 331, 352, 342, 309, 359.
 
 Sources: `results/checks/table3_robust.csv`, `sensitivity_robust.csv` (notebook 07);
@@ -333,7 +343,7 @@ Mean pinball loss on the daytime low (MW), published series then rescaled:
 | M1 | 63.1 | 42.4 | 50.5 | 43.1 |
 | M2 | 34.6 | 29.2 | 53.5 | 38.4 |
 | M3 | 43.3 | 87.0 | 49.6 | 53.6 |
-| M4 | 63.5 | 120.7 | 51.8 | 64.2 |
+| M4 | 67.5 | 123.3 | 46.2 | 60.0 |
 | M5 | 28.5 | 20.8 | 42.8 | 41.3 |
 | M6 | 36.6 | 26.2 | 75.1 | 73.2 |
 
@@ -342,12 +352,12 @@ Change in mean pinball loss on the daytime low (%):
 | Comparison | Annual, published | Annual, rescaled | Monthly, published | Monthly, rescaled |
 |---|---|---|---|---|
 | H1: M3 against M2 | +25.0 | +198.2 | -7.4 | +39.6 |
-| H2: M4 against M3 | +46.7 | +38.7 | +4.5 | +19.8 |
-| Model form: M5 against M4 | -55.1 | -82.8 | -17.3 | -35.6 |
+| H2: M4 against M3 | +56.0 | +41.7 | -6.9 | +12.0 |
+| Model form: M5 against M4 | -57.8 | -83.2 | -7.2 | -31.2 |
 | Supplementary: M5 against M6 | -22.2 | -20.8 | -43.0 | -43.6 |
 
-Across both targets and both levels, 15 of the 16 comparisons keep their direction. The one that
-reverses is H1 on the monthly daytime low. On the rescaled series no annual daytime low falls
+Across both targets and both levels, 14 of the 16 comparisons keep their direction. The two that
+reverse are H1 and H2 on the monthly daytime low. On the rescaled series no annual daytime low falls
 inside the band of M3 or of M4. Rescaling moves the 2022 daytime low from 1,458 to 1,443 MW.
 
 Sources: `results/checks/sensitivity_rescale_factors.csv`, `sensitivity_rescaled_lows.csv`,
@@ -362,14 +372,15 @@ Annual daytime low:
 | | Mean pinball loss (MW) | Mean error of POE50 (MW) | POE50 in 2023, 2024, 2025 |
 |---|---|---|---|
 | M3 | 43.3 | +77 | 1,016, 875, 839 |
-| M4 | 63.5 | +180 | 921, 757, 683 |
+| M4 | 67.5 | +193 | 915, 740, 650 |
 | M4 without temperature | 62.6 | +150 | 871, 760, 707 |
-| M4 without PV × solar | 45.7 | +122 | 1,029, 843, 760 |
+| M4 without PV × solar | 46.3 | +123 | 1,018, 833, 759 |
 
-M4's daytime-low coefficients across the seven origins: PV × solar -13.3 to -18.2 MW per 1,000
-MW × MJ/m²; maximum temperature +5.8 to +11.6 MW per °C; minimum temperature +26.0 to +34.3 MW
-per °C. PV × solar on the sunniest days of each target year (its 99th percentile) lies 7.8% to
-29.3% beyond the largest value in the training days.
+M4's daytime-low coefficients across the seven origins: PV × solar -15.4 to -18.3 MW per 1,000
+MW × MJ/m²; each degree of maximum temperature below 21 °C +47.6 to +71.8 MW, and each degree
+above it +18.2 to +19.7 MW; each degree of minimum temperature below 18 °C -12.4 to -4.6 MW, and
+each degree above it +94.1 to +105.7 MW. PV × solar on the sunniest days of each target year
+(its 99th percentile) lies 7.8% to 29.3% beyond the largest value in the training days.
 
 Sources: `results/checks/check_m4_terms.csv`, `check_m4_coefficients.csv` (notebook 05).
 
@@ -388,10 +399,28 @@ over 76 holidays and 667 weekend days in 2019 to 2025 (MW):
 
 | Low | M2 | M3 | M4 | M5 | M6 |
 |---|---|---|---|---|---|
-| Daytime | -159 | -150 | -123 | -126 | -96 |
-| Overnight | -45 | -44 | -42 | -49 | -43 |
+| Daytime | -159 | -150 | -132 | -126 | -96 |
+| Overnight | -45 | -44 | -45 | -49 | -43 |
 
 Source: `results/checks/check_holiday_miss.csv` (notebook 05).
+
+### 4.7 The knots of M4's two temperature Vs
+
+M4 takes maximum and minimum temperature each as a V (D37): one slope for each degree below a
+knot and another for each degree above it. The knots are the whole-degree pair with the lowest
+error on the daytime low when M4 is fitted on the days of 2015 to 2018, the first training
+window. No test year takes part. These are in-sample fits, not forecast scores.
+
+| | Knot on maximum (°C) | Knot on minimum (°C) | Daytime low RMSE (MW) | Overnight low RMSE (MW) |
+|---|---|---|---|---|
+| Lowest error on the daytime low (in use) | 21 | 18 | 129.2 | 69.1 |
+| Lowest error on the overnight low | 24 | 17 | 133.8 | 68.6 |
+
+The 81 pairs tried run from 17 to 25 °C on the maximum and from 14 to 22 °C on the minimum.
+Their error on the daytime low runs from 129.2 to 148.8 MW; 7 pairs lie within 1 MW of the
+lowest.
+
+Source: `results/checks/check_temperature_knot.csv` (notebook 05, section 3).
 
 ## 5. Limitations of the data, with their measures
 

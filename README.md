@@ -15,7 +15,7 @@ Two documents sit beside this one:
 - [publication/01_conference/results_summary.md](publication/01_conference/results_summary.md):
   the numbers behind the paper, by type of evidence, each with the file it comes from.
 - [publication/01_conference/analysis_plan.md](publication/01_conference/analysis_plan.md): the
-  design, and the record of every decision and finding made while building (D1 to D36, F1 to
+  design, and the record of every decision and finding made while building (D1 to D38, F1 to
   F11). Its seventh round holds the key from the paper's earlier figure and table numbers to the
   current ones.
 
@@ -209,10 +209,18 @@ low; that choice was recorded before any model was run.
 
 M1 repeats last year's value. M2 to M5 are a ladder fitted on daily lows, each step adding one
 thing: M2 knows the calendar and time; M3 swaps time for PV capacity; M4 adds weather (PV capacity
-times solar exposure, maximum and minimum temperature); M5 is given M4's information in XGBoost.
+times solar exposure, and maximum and minimum temperature each as a V); M5 is given M4's
+information in XGBoost.
 The two tests fixed in advance are M3 against M2 and M4 against M3. M6 (XGBoost with M3's
 information) was added after the scores of M1 to M5 had been seen, so that M5 against M6 shows
 what weather adds in tree form; it is reported as supplementary.
+
+Each temperature enters M4 as a V because demand rises on both cold and hot days: one slope for
+each degree below a knot and another for each degree above it, two straight lines meeting at the
+knot. The knots are 21 °C for maximum temperature and 18 °C for minimum temperature, chosen on
+2015 to 2018 only. M5 takes the two temperatures as they are. M4 first used them as two straight
+terms; its form was revised after the scores of all six models had been seen. The earlier
+results and code are kept in `publication/01_conference/archive/v1_straight_line_m4`.
 
 Notebook 08 was also added after the first scores were seen. It scores the daily models day by
 day, each given the day's own weather. Because M4 and M5 see the actual weather there, their

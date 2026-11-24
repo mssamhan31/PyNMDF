@@ -162,6 +162,7 @@ def replay(
     n_draws: int,
     robust_days: dict,
     rng: np.random.Generator,
+    knots: dict,
 ) -> pd.DataFrame:
     """Simulate the target year under every replay weather year and reduce it to the targets.
 
@@ -174,6 +175,7 @@ def replay(
         n_draws: Simulations per replay year.
         robust_days: Days averaged by the robust target.
         rng: Random generator.
+        knots: The knots of the two temperature Vs (degrees C), as given to ``add_weather``.
 
     Returns:
         The output of ``period_lows``: one row per simulation, ``len(replay_years) * n_draws``
@@ -182,7 +184,7 @@ def replay(
     dates = target_calendar.index
     predicted = np.stack(
         [
-            predict(add_weather(target_calendar, replayed_weather(weather, dates, year)))[
+            predict(add_weather(target_calendar, replayed_weather(weather, dates, year), knots))[
                 TROUGHS
             ].to_numpy()
             for year in replay_years

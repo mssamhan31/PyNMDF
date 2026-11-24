@@ -10,6 +10,7 @@ import pandas as pd
 from pynmdf import models, poe
 
 ROBUST_DAYS = {"annual": 15, "monthly": 2}
+KNOTS = {"tmax": 21.0, "tmin": 18.0}  # the stub models below ignore them
 
 
 def test_replay_runs_the_target_year_through_each_weather_year():
@@ -44,7 +45,9 @@ def test_replay_runs_the_target_year_through_each_weather_year():
             {"overnight": features["tmax"], "daytime": features["tmax"] + 100}, index=features.index
         )
 
-    lows = poe.replay(follows_weather, calendar, weather, replay_years, None, 1, ROBUST_DAYS, rng)
+    lows = poe.replay(
+        follows_weather, calendar, weather, replay_years, None, 1, ROBUST_DAYS, rng, KNOTS
+    )
     assert len(lows) == len(replay_years)
     for row, year in enumerate(replay_years):
         tmax = weather.loc[str(year), "tmax"]
@@ -61,7 +64,9 @@ def test_replay_runs_the_target_year_through_each_weather_year():
             {"overnight": features["month"] * 10.0, "daytime": features["pv"]}, index=features.index
         )
 
-    same = poe.replay(ignores_weather, calendar, weather, replay_years, None, 1, ROBUST_DAYS, rng)
+    same = poe.replay(
+        ignores_weather, calendar, weather, replay_years, None, 1, ROBUST_DAYS, rng, KNOTS
+    )
     assert (same.nunique() == 1).all()
 
     # --- With residuals: one simulation per draw, and the same seed gives the same output.
@@ -73,7 +78,15 @@ def test_replay_runs_the_target_year_through_each_weather_year():
     def run(seed):
         generator = np.random.default_rng(seed)
         return poe.replay(
-            follows_weather, calendar, weather, replay_years, residuals, 4, ROBUST_DAYS, generator
+            follows_weather,
+            calendar,
+            weather,
+            replay_years,
+            residuals,
+            4,
+            ROBUST_DAYS,
+            generator,
+            KNOTS,
         )
 
     assert len(run(7)) == len(replay_years) * 4

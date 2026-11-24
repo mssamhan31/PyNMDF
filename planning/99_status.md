@@ -5,21 +5,21 @@ The log gains one entry per finished step, newest first.
 
 ## Now (24 November 2026)
 
-- **Step in hand:** step 4 of the [plan](03_planning.md), revise M4 and M5.
-- **Done:** step 1 (planning documents and `AGENTS.md`), step 2 (archive of the current
-  version) and step 3 (restructure).
+- **Step in hand:** step 5 of the [plan](03_planning.md), tidy for publication.
+- **Done:** step 1 (planning documents and `AGENTS.md`), step 2 (archive of the first
+  version), step 3 (restructure) and step 4 (M4 revised).
 - **Branch:** `piecewise-m4-and-restructure`, cut from `main` at `71c3cb3`. There is no remote;
   nothing has been pushed.
-- **Tag:** `conference-v1-straight-line-m4` on `71c3cb3`, the commit the current results came
+- **Tag:** `conference-v1-straight-line-m4` on `71c3cb3`, the commit the first results came
   from.
-- **Results:** in `publication/01_conference/results`, committed, with M4 using straight
-  temperature terms. They are identical to the archived copy.
+- **Results:** in `publication/01_conference/results`, committed, with M4 taking maximum and
+  minimum temperature each as a V. Every number of M1, M2, M3, M5 and M6 is identical to the
+  archived copy.
 
 ### Where the repository differs from the spec
 
 | Spec says | Today | Closed by |
 |---|---|---|
-| M4 uses mean temperature as a V; M5 uses mean temperature | Both use `tmax` and `tmin` as straight terms | Step 4 |
 | `LICENSE`, a front-page README and a README per publication | No licence; one long README | Step 5 |
 
 ## Open items
@@ -31,6 +31,20 @@ The log gains one entry per finished step, newest first.
 | Whether the plan and status pages are published with the rest of `planning/` | Step 6 |
 
 ## Log
+
+### 24 November 2026: M4 revised
+
+- M4 now takes maximum and minimum temperature each as a V, with knots of 21 and 18 degrees
+  C chosen on 2015 to 2018 only (D37). M5 is as it was first built.
+- A first form, with one V on mean temperature in M4 and mean temperature in M5, was run and
+  set aside after its scores were seen (D38). The form is now settled.
+- New: the knot check (`check_temperature_knot.csv`) and two tests. 12 tests pass.
+- Notebooks 05 to 08 were rerun and written back. In all five score tables only M4's rows
+  moved; M1, M2, M3, M5 and M6 are identical to the archive.
+- Effect on M4: better in the daily test (MAE 227.1 to 186.1 MW over all days); one year
+  ahead, slightly worse on the annual daytime low (63.5 to 67.5 MW) and better on the monthly
+  (51.8 to 46.2 MW). H2 on the monthly daytime low changed sign.
+- The results summary, the READMEs, notebook 05 and the spec describe the revised M4.
 
 ### 24 November 2026: repository restructured
 

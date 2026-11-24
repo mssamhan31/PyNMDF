@@ -39,7 +39,7 @@ ahead, and reports the answer as probability of exceedance (POE) levels.
 
 | Folder | Paper | Question | State |
 |---|---|---|---|
-| `publication/01_conference` | Four-page conference paper | Once rooftop PV capacity is in the model, does weather improve one-year-ahead probabilistic forecasts of annual minimum demand? | Analysis complete; one model revision under way (see the status) |
+| `publication/01_conference` | Four-page conference paper | Once rooftop PV capacity is in the model, does weather improve one-year-ahead probabilistic forecasts of annual minimum demand? | Analysis complete; M4 revised on 24 November 2026 |
 
 ## Not now
 

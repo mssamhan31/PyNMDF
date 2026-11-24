@@ -1,5 +1,5 @@
-"""Tests 4, 5 and 9: scoring is right, no forecast can see past its origin, and the daily
-skill tables match a hand calculation.
+"""Tests 4, 5, 9 and 12: scoring is right, no forecast can see past its origin, the daily
+skill tables match a hand calculation, and the knot check finds the knots of two Vs.
 
 All data are synthetic.
 """
@@ -131,8 +131,10 @@ CFG = {
     "models": {
         "seed": 1,
         "n_draws": 3,
+        "temperature_knots_c": {"tmax": 21, "tmin": 18},
         "xgboost": {"n_estimators": 10, "max_depth": 2, "learning_rate": 0.3, "subsample": 0.8},
     },
+    "checks": {"temperature_knot_candidates_c": {"tmax": [20, 22, 24], "tmin": [11, 13, 15]}},
 }
 
 
@@ -158,3 +160,23 @@ def test_no_forecast_sees_past_its_origin():
     # The scrambling did reach the later forecasts, so the test is not passing by default.
     changed = before.loc[~made_by_then, "poe50"] != after.loc[~made_by_then, "poe50"]
     assert changed.any()
+
+
+def test_knot_check_finds_the_knots_of_two_vs():
+    # --- Add two Vs to the synthetic demand. Every half hour of a day rises with each degree of
+    #     maximum temperature below or above 22, and of minimum temperature below or above 13.
+    total, pv, weather = _synthetic_world(seed=0)
+    tmax, tmin = weather["tmax"], weather["tmin"]
+    v = (
+        30 * (22 - tmax).clip(lower=0)
+        + 50 * (tmax - 22).clip(lower=0)
+        + 20 * (13 - tmin).clip(lower=0)
+        + 40 * (tmin - 13).clip(lower=0)
+    )
+    total = total + v.reindex(total.index.normalize()).to_numpy()
+
+    fit = evaluate.temperature_knot_fit(total, pv, weather, CFG)
+    assert len(fit) == 9  # every pair of three knots for each temperature
+    # Both lows carry the two Vs, so both fits are best at the pair of knots they were built on.
+    assert fit["daytime_rmse_mw"].idxmin() == (22, 13)
+    assert fit["overnight_rmse_mw"].idxmin() == (22, 13)

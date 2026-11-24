@@ -6,12 +6,20 @@ given. M2 to M5 are a nested ladder, each step changing one thing:
 
 - M2 Time trend: calendar (month, non-working day) and time, with a slope per month.
 - M3 PV only: as M2, with PV capacity in place of time.
-- M4 PV + weather: M3 plus PV x solar exposure, maximum temperature and minimum temperature.
+- M4 PV + weather: M3 plus PV x solar exposure, and maximum and minimum temperature each as a V.
 - M5 PV + weather (XGBoost): the same information as M4, in a tree model.
 
 M6 PV only (XGBoost) is M3's information in a tree model. It was added after the scores of M1 to
 M5 had been seen, so that M5 against M6 shows what weather adds in tree form; it is supplementary
 and takes no part in the two pre-set comparisons (M3 against M2, M4 against M3).
+
+Each temperature enters M4 as a V because demand rises on both cold and hot days, so one
+straight slope is the wrong shape. Two columns carry a V: the degrees below a knot and the
+degrees above it, each with its own slope. That is two straight lines meeting at the knot
+(piecewise linear regression with one breakpoint), and M4 stays one linear model. M5 is given the
+two temperatures as they are, since a tree needs no knot. M4 first used the two temperatures as
+straight terms; its form was revised after the scores of all six models had been seen (D37). M5
+is as it was first built.
 
 A non-working day is a Saturday, a Sunday or a public holiday. It is one flag, not two: with
 separate weekend and holiday flags the linear models added the two effects on a holiday that fell
@@ -28,7 +36,8 @@ from xgboost import XGBRegressor
 from pynmdf.targets import public_holidays
 
 TROUGHS = ["overnight", "daytime"]
-TEMPERATURE = ["tmax", "tmin"]
+# Each temperature as a V, for the linear model: degrees below its knot and degrees above it.
+TEMPERATURE = ["tmax_below", "tmax_above", "tmin_below", "tmin_above"]
 WEATHER = ["pv_solar", *TEMPERATURE]
 CALENDAR_AND_PV = ["month", "non_working", "pv"]
 
@@ -37,7 +46,8 @@ MODELS = {
     "M2": {"estimator": "linear", "trend": "time", "weather": []},
     "M3": {"estimator": "linear", "trend": "pv", "weather": []},
     "M4": {"estimator": "linear", "trend": "pv", "weather": WEATHER},
-    "M5": {"estimator": "xgboost", "columns": [*CALENDAR_AND_PV, *WEATHER]},
+    # The same information as M4. A tree bends by itself, so it takes the temperatures as they are.
+    "M5": {"estimator": "xgboost", "columns": [*CALENDAR_AND_PV, "pv_solar", "tmax", "tmin"]},
     "M6": {"estimator": "xgboost", "columns": CALENDAR_AND_PV},
 }
 
@@ -94,7 +104,7 @@ def calendar_features(
     )
 
 
-def add_weather(calendar: pd.DataFrame, weather: pd.DataFrame) -> pd.DataFrame:
+def add_weather(calendar: pd.DataFrame, weather: pd.DataFrame, knots: dict) -> pd.DataFrame:
     """Add the weather predictors to the calendar predictors, row for row.
 
     The rows of ``weather`` are taken in order, whatever their dates, so that the weather replay
@@ -103,14 +113,25 @@ def add_weather(calendar: pd.DataFrame, weather: pd.DataFrame) -> pd.DataFrame:
     Args:
         calendar: The output of ``calendar_features``.
         weather: ``tmax``, ``tmin`` (degrees C) and ``solar`` (MJ/m2), one row per calendar row.
+        knots: The temperature (degrees C) at which the two arms of each V meet, for ``tmax``
+            and for ``tmin``.
 
     Returns:
-        ``calendar`` with ``tmax``, ``tmin`` and ``pv_solar`` (PV capacity times solar exposure).
+        ``calendar`` with ``tmax``, ``tmin``, ``pv_solar`` (PV capacity times solar exposure)
+        and, for each of the two temperatures, the degrees below its knot (``tmax_below``,
+        ``tmin_below``; zero on a warmer day) and the degrees above it (``tmax_above``,
+        ``tmin_above``; zero on a cooler day).
     """
+    columns = {}
+    for name in ("tmax", "tmin"):
+        temperature, knot = weather[name].to_numpy(), knots[name]
+        columns[name] = temperature
+        # Two columns that are each zero on one side of the knot, so each arm has its own slope
+        # and the two arms meet at the knot.
+        columns[f"{name}_below"] = np.clip(knot - temperature, 0, None)
+        columns[f"{name}_above"] = np.clip(temperature - knot, 0, None)
     return calendar.assign(
-        tmax=weather["tmax"].to_numpy(),
-        tmin=weather["tmin"].to_numpy(),
-        pv_solar=calendar["pv"].to_numpy() * weather["solar"].to_numpy(),
+        **columns, pv_solar=calendar["pv"].to_numpy() * weather["solar"].to_numpy()
     )
 
 

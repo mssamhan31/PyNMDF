@@ -1,8 +1,7 @@
 # Archive: v1, straight-line M4
 
-The results of the conference analysis as they stood before M4 and M5 were revised, with the
-code that made them. Kept so that the earlier numbers can be read without going through git
-history.
+The results of the conference analysis as they stood before M4 was revised, with the code that
+made them. Kept so that the earlier numbers can be read without going through git history.
 
 | | |
 |---|---|
@@ -12,14 +11,13 @@ history.
 
 ## Why it was superseded
 
-In this version M4 used maximum and minimum temperature as two straight terms, and M5 was given
-the same two columns. Minimum demand rises on both cold and hot days, so one straight slope is
-the wrong shape. On the supervisor's advice M4 was revised to use mean temperature as a V, and
-M5 to use mean temperature. The revision is decision D37 in `analysis_plan.md`, and was made
-after the scores of all six models had been seen.
+In this version M4 used maximum and minimum temperature as two straight terms. Minimum demand
+rises on both cold and hot days, so one straight slope is the wrong shape. On the supervisor's
+advice M4 was revised to take each of the two temperatures as a V. The revision is decision D37
+in `analysis_plan.md`, and was made after the scores of all six models had been seen.
 
-Only M4, M5 and the comparisons that involve them differ between this version and the current
-one. M1, M2, M3 and M6 are the same in both.
+Only M4 and the comparisons that involve it differ between this version and the current one.
+M1, M2, M3, M5 and M6 are the same in both.
 
 ## What is here
 

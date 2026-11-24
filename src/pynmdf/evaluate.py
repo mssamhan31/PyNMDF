@@ -9,6 +9,7 @@ Errors and misses are always actual minus predicted.
 """
 
 from functools import partial
+from itertools import product
 from typing import NamedTuple
 
 import numpy as np
@@ -34,7 +35,7 @@ def _daily_data(total: pd.Series, pv: pd.Series, weather: pd.DataFrame, cfg: dic
     study, settings = cfg["study"], cfg["models"]
     dates = pd.date_range(f"{study['first_year']}-01-01", f"{study['last_year']}-12-31", freq="D")
     calendar = models.calendar_features(dates, pv, cfg["calendar"]["holiday_subdivision"], dates[0])
-    features = models.add_weather(calendar, weather.reindex(dates))
+    features = models.add_weather(calendar, weather.reindex(dates), settings["temperature_knots_c"])
     troughs = targets.daily_troughs(total, cfg["targets"]["troughs"]).reindex(dates)
     usable = troughs.notna().all(axis=1).to_numpy() & features.notna().all(axis=1).to_numpy()
     xgboost = {**settings["xgboost"], "random_state": settings["seed"], "n_jobs": 1}
@@ -98,6 +99,7 @@ def _replay_forecasts(
                 replay_years,
                 robust_days=robust_days,
                 rng=np.random.default_rng([settings["seed"], number[model], origin]),
+                knots=settings["temperature_knots_c"],
             )
             simulated = run(residuals=residuals, n_draws=settings["n_draws"])
             # The central forecast adds no residual; it is the mean over the weather years.
@@ -397,10 +399,11 @@ def m4_weather_terms(
 
     Returns:
         One row per test year, all for the daytime low: the coefficient on PV x solar (MW per
-        1,000 MW x MJ/m2) and on maximum and minimum temperature (MW per degree C); the largest
-        PV x solar in the training days; PV x solar on the sunniest days of the target year
-        under its own weather (the quantile in ``checks.pv_solar_quantile``); and how far, in
-        per cent, the second lies beyond the first.
+        1,000 MW x MJ/m2) and on each degree of maximum and of minimum temperature below and
+        above its knot (MW per degree C); the largest PV x solar in the training days;
+        PV x solar on the sunniest days of the target year under its own weather (the
+        quantile in ``checks.pv_solar_quantile``); and how far, in per cent, the second lies
+        beyond the first.
     """
     data = _daily_data(total, pv, weather, cfg)
     dates = data.features.index
@@ -413,13 +416,45 @@ def m4_weather_terms(
         reached = data.features.loc[target, "pv_solar"].quantile(cfg["checks"]["pv_solar_quantile"])
         rows[year] = {
             "pv_solar_mw_per_1000": 1000 * daytime["pv_solar"],
-            "tmax_mw_per_degree": daytime["tmax"],
-            "tmin_mw_per_degree": daytime["tmin"],
+            **{f"{term}_mw_per_degree": daytime[term] for term in models.TEMPERATURE},
             "pv_solar_max_in_training": seen,
             "pv_solar_high_in_target": reached,
             "beyond_training_pct": 100 * (reached / seen - 1),
         }
     return pd.DataFrame.from_dict(rows, orient="index").rename_axis("year")
+
+
+def temperature_knot_fit(
+    total: pd.Series, pv: pd.Series, weather: pd.DataFrame, cfg: dict
+) -> pd.DataFrame:
+    """Return M4's in-sample error for each candidate pair of knots, on the first training window.
+
+    The check behind ``models.temperature_knots_c``. M4 is refitted with each candidate pair on
+    the days before the first test year, so no test year takes part in the choice. These are
+    in-sample fits, not forecast scores.
+
+    Returns:
+        One row per pair of the knots in ``checks.temperature_knot_candidates_c`` (degrees C,
+        for ``tmax`` and for ``tmin``): the root mean squared error (MW) of the overnight fit
+        and of the daytime fit.
+    """
+    data = _daily_data(total, pv, weather, cfg)
+    dates = data.features.index
+    # A day's usability does not depend on the knots, so the same days are fitted every time.
+    train = data.usable & (dates.year < cfg["evaluation"]["first_test_year"])
+    troughs = data.troughs.loc[train, models.TROUGHS]
+    candidates = cfg["checks"]["temperature_knot_candidates_c"]
+    rows = {}
+    for knots in product(candidates["tmax"], candidates["tmin"]):
+        pair = dict(zip(("tmax", "tmin"), knots))
+        features = models.add_weather(data.calendar, weather.reindex(dates), pair)[train]
+        fitted = models.fit_daily(features, troughs, "M4", data.xgboost)
+        residuals = troughs - models.predict_daily(fitted, features, "M4")
+        rows[knots] = {
+            f"{trough}_rmse_mw": np.sqrt((residuals[trough] ** 2).mean())
+            for trough in models.TROUGHS
+        }
+    return pd.DataFrame.from_dict(rows, orient="index").rename_axis(["tmax_knot_c", "tmin_knot_c"])
 
 
 # --------------------------------------------------------------------------------------------

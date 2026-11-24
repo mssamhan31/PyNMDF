@@ -292,6 +292,25 @@ Key from the earlier numbers to the current ones:
 | Table III (POE scores, both targets) | Table III holds the daytime low; the whole-day minimum is a check, `table3_minimum.csv` |
 | Table IV (daily out-of-sample test) | Table II |
 
+**Agreed on 24 November 2026, eighth round: the form of temperature in M4. The scores of all six
+models had been seen.**
+
+| ID | Decision |
+|---|---|
+| D37 | **M4 takes maximum and minimum temperature each as a V, in place of one straight term each.** The supervisor's comment: the scatter of minimum demand against temperature is a V, so a linear model that uses weather should be piecewise linear. For each temperature M4 now has two columns, the degrees below a knot and the degrees above it (`tmax_below`, `tmax_above`, `tmin_below`, `tmin_above`), each with its own slope: two straight lines that meet at the knot. M4 stays one linear model, with four temperature terms in place of two. **The knots** are 21 °C for the maximum and 18 °C for the minimum: the whole-degree pair with the lowest RMSE on the daytime low when M4 is fitted on 2015 to 2018, the first training window, among 81 pairs (`check_temperature_knot.csv`, notebook 05, section 3). No test year takes part in the choice. **Nothing else changes.** M5 is given the same two temperatures as they are, as before, since a tree needs no knot; M1, M2, M3, M5 and M6 reproduce their earlier numbers exactly. Table I keeps the label "PV + weather, linear". **Made after the scores were seen**, so H2 (M4 against M3), set before any model was run, is now judged on a revised M4. The results and code of the first M4 are kept in `archive/v1_straight_line_m4` (tag `conference-v1-straight-line-m4`). **Effect on M4:** in the daily test its MAE over all days goes from 227.1 to 186.1 MW; one year ahead its pinball loss on the daytime low goes from 63.5 to 67.5 MW (annual) and from 51.8 to 46.2 MW (monthly) |
+| D38 | **A first form of the revision was run and set aside; the form is now settled.** The first form gave M4 one V on mean temperature (knot 19 °C, chosen in the same way) and gave M5 mean temperature in place of the two temperatures. Its scores, in the table below, were seen before it was set aside. It was set aside because mean temperature is the average of the other two: it withheld from M5 information that model first had, and it changed a model the supervisor's comment did not concern. The form in D37 changes M4 only. The choice between the two forms was therefore made after the scores of the first were seen. The form of temperature is not changed again in the light of a score. The code of the form set aside was not committed; its numbers are recorded here only |
+
+Mean pinball loss one year ahead and MAE of the daily test (MW), for the three forms:
+
+| Measure | M4, straight terms | M4, V on mean temperature (set aside) | M4, D37 | M5, as first built and now | M5, mean temperature (set aside) |
+|---|---|---|---|---|---|
+| Daytime low, annual | 63.5 | 94.0 | 67.5 | 28.5 | 31.7 |
+| Daytime low, monthly | 51.8 | 50.5 | 46.2 | 42.8 | 44.3 |
+| Whole-day minimum, annual | 60.0 | 84.3 | 61.5 | 26.9 | 29.7 |
+| Whole-day minimum, monthly | 44.1 | 46.0 | 41.5 | 32.5 | 31.9 |
+| Daily test, all days | 227.1 | 197.3 | 186.1 | 157.4 | 167.9 |
+| Daily test, lowest 10% of days | 169.2 | 157.5 | 152.6 | 173.1 | 198.8 |
+
 **My reading of D9. Confirmed on 18 November 2026.**
 
 | Point | Reading |

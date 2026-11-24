@@ -1,82 +1,69 @@
-# Plan: mean temperature as a V in M4
+# Plan: temperature as a V in M4
 
-Step 4 of the [plan](../03_planning.md). The model it leads to is described in
-[spec/models.md](../spec/models.md).
+Step 4 of the [plan](../03_planning.md). Done on 24 November 2026. The model it led to is
+described in [spec/models.md](../spec/models.md); the decision record is D37 and D38 in
+`publication/01_conference/analysis_plan.md`.
 
 ## Why
 
 The supervisor's comment: the scatter of minimum demand against temperature is a V, so a linear
 model that uses weather should be piecewise linear, not one straight line.
 
-The first training window (2015 to 2018) bears this out. With the calendar and PV already in the
-model, the error left on the daytime low is +121 MW at a mean temperature of 9 to 12 degrees C,
--94 MW at 18 to 21 and +242 MW at 27 to 30.
-
-## What changes
+## What changed
 
 | Item | From | To |
 |---|---|---|
-| M4's temperature terms | `tmax` and `tmin`, one straight slope each | `below_knot` and `above_knot`: degrees of mean temperature below and above the knot |
-| M5's temperature columns | `tmax` and `tmin` | `tmean` |
-| Config | | `models.temperature_knot_c: 19` |
-| M1, M2, M3, M6 | | Unchanged |
+| M4's temperature terms | `tmax` and `tmin`, one straight slope each | For each temperature, the degrees below a knot and the degrees above it: `tmax_below`, `tmax_above`, `tmin_below`, `tmin_above` |
+| Config | | `models.temperature_knots_c`: 21 for `tmax`, 18 for `tmin` |
+| M1, M2, M3, M5, M6 | | Unchanged; their numbers are identical to the archive |
 | M4's label in Table I | "PV + weather, linear" | Unchanged |
 
-M4 stays one linear model with the same number of terms: two columns replace two.
+M4 stays one linear model, with four temperature terms in place of two.
 
-## The knot
+## The knots
 
-19 degrees C: the whole-degree value with the lowest error on the daytime low over 2015 to
-2018. No test year takes part.
+The whole-degree pair with the lowest error on the daytime low when M4 is fitted on 2015 to
+2018. No test year takes part. Notebook 05 (section 3) refits M4 with 81 pairs and writes the
+errors to `results/checks/check_temperature_knot.csv`: the lowest is 129.2 MW at 21 and 18
+degrees C, and 7 pairs lie within 1 MW of it.
 
-| Knot (degrees C) | 17 | 18 | 19 | 20 | 21 |
-|---|---|---|---|---|---|
-| Daytime low, RMSE (MW) | 142.0 | 140.5 | 140.2 | 141.0 | 143.4 |
-| Overnight low, RMSE (MW) | 79.7 | 78.5 | 77.8 | 77.6 | 78.2 |
+## What was done
 
-For comparison, the straight terms give 175.1 MW on the daytime low and 90.9 MW on the
-overnight low over the same days. These are in-sample fits, not forecast scores.
+1. **Config.** The two knots, and the candidates for the knot check.
+2. **`models.py`.** `add_weather` takes the knots and adds the four columns. M4's column list and
+   that of the variant "M4 without PV x solar" follow.
+3. **`poe.py`, `evaluate.py`.** The knots are passed to the two places that build weather
+   columns. The table of M4's coefficients reports the four new slopes. A new function,
+   `temperature_knot_fit`, is the knot check.
+4. **Tests.** Two new tests: the four columns on hand-worked days, with M4 recovering a different
+   slope on every arm; and the knot check finding the knots of two planted Vs. 12 tests pass.
+5. **Rerun** of notebooks 05 to 08, written back in place.
+6. **Check.** In all five score tables, only M4's rows moved.
+7. **Documents.** D37 and D38, the results summary, the READMEs, notebook 05 and the spec.
 
-These numbers come from a look made outside the repository. This step makes them reproducible:
-a short section in notebook 05 writes them to `results/checks/check_temperature_knot.csv`.
+## What it did to the results
 
-## Work
+Only M4 and the comparisons that involve it moved.
 
-1. **Config.** Add the knot, with a comment on how it was chosen.
-2. **`models.py`.** `add_weather` takes the knot and adds `tmean`, `below_knot` and
-   `above_knot`. The column lists of M4, M5 and the variant "M4 without PV x solar" change.
-   `tmax` and `tmin` stay among the predictors, unused, so the set of usable days is unchanged.
-3. **`poe.py`, `evaluate.py`.** The knot is passed to the two places that build weather columns.
-   The table of M4's coefficients reports the two new slopes in place of the two old ones.
-4. **Test.** The two columns on a few hand-worked days: below, at and above the knot.
-5. **Rerun** notebooks 05 to 08. Notebooks 01 to 04 do not depend on the models.
-6. **Check.** Every number of M1, M2, M3 and M6 is identical to the archive. Only M4, M5 and the
-   comparisons that involve them move.
-7. **Documents.** Record D37 in `analysis_plan.md`. Update `results_summary.md`, the model
-   descriptions in the READMEs and in notebook 05, and remove the "not yet true" notes from the
-   spec.
+| Measure (MW) | Before | After |
+|---|---|---|
+| Daily test, MAE over all days | 227.1 | 186.1 |
+| Daily test, MAE over the lowest 10% of days | 169.2 | 152.6 |
+| One year ahead, pinball loss, annual daytime low | 63.5 | 67.5 |
+| One year ahead, pinball loss, monthly daytime low | 51.8 | 46.2 |
 
-## What will change in the results
+H2 (M4 against M3) on the monthly daytime low changed sign, from +4.5% to -6.9%. On both annual
+targets M4 still scores worse than M3.
 
-Every number of M4 and of M5: their rows in Table II and Table III, their panels in Fig. 4,
-three of the four comparisons (H2, model form, and M5 against M6), and the checks on M4's terms.
+## The form that was set aside
 
-Which way they move is not known. Nothing has been run on the test years, so that no choice
-here was made by looking at a score. A before-and-after table is shown to the author before the
-commit.
-
-One expectation, to be tested: the daily test (Table II) should improve for M4, but its
-one-year-ahead scores may move little, because the earlier diagnosis traced M4's miss to the
-PV x solar term and not to temperature.
-
-## The decision record
-
-D37 will state: the change, that it was made after the scores of all six models were seen, on
-the supervisor's advice; that the knot was chosen on 2015 to 2018 only; and that the earlier
-results are kept in `archive/v1_straight_line_m4`.
+A first form was built and run before this one: one V on mean temperature in M4, and mean
+temperature in place of the two temperatures in M5. It was set aside because it changed M5,
+which the supervisor's comment did not concern, and withheld from it information it first had.
+Its scores are in D38. The form of temperature is not changed again in the light of a score.
 
 ## Not in this step
 
-- No second model, no second knot, no knot fitted again at each origin.
-- No change to M6, to XGBoost's settings or to any target or score.
-- No new figure. The old straight-line M4 is not kept as a live variant; the archive holds it.
+- No second model, and no knot fitted again at each origin.
+- No change to M5, M6, XGBoost's settings, or any target or score.
+- No new figure. The first M4 is not kept as a live variant; the archive holds it.
