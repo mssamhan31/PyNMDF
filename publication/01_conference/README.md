@@ -17,7 +17,7 @@ Paths on this page are relative to this folder. Commands are run from the reposi
 | Path | Holds |
 |---|---|
 | [results_summary.md](results_summary.md) | The numbers behind the paper, by type of evidence, each with the file it comes from |
-| [analysis_plan.md](analysis_plan.md) | The design, and the record of every decision and finding made while building (D1 to D38, F1 to F11). Its seventh round holds the key from the paper's earlier figure and table numbers to the current ones |
+| [analysis_plan.md](analysis_plan.md) | The design, and the record of every decision and finding made while building (D1 to D40, F1 to F11). Its seventh round holds the key from the paper's earlier figure and table numbers to the current ones |
 | `notes/` | The author's own notes behind three decisions |
 | `notebooks/` | The eight notebooks. Each opens with the figures, tables and checks it produces |
 | `results/` | Figures, tables and checks (committed) |
@@ -68,16 +68,18 @@ Figures are saved as PNG (600 dpi) and PDF, tables and checks as CSV.
 
 ## The paper's figures and tables
 
-Four figures and three tables, under `results`.
+Four figures and three tables, under `results`. In the figures a low is labelled "minimum
+demand": the daytime low reads "daytime minimum demand". The text, the tables and the checks keep
+"low".
 
 | Figure or table | File | Notebook | Drawn by |
 |---|---|---|---|
-| Fig. 1: the annual overnight low and daytime low, over PV capacity | `figures/fig1`, `tables/fig1_data.csv` | 03 | `plots.annual_lows_and_pv` |
+| Fig. 1, three panels on one year axis: (a) the annual overnight low and daytime low, (b) when each year's lowest 1% of half hours occur, as a heat map, (c) PV capacity | `figures/fig1`, `tables/fig1_data.csv`, `tables/fig1_hours.csv` | 03 | `plots.annual_lows_hours_and_pv` |
 | Fig. 2: the annual daytime low against PV capacity, with the fitted line and R-squared | `figures/fig2`, `tables/fig2_data.csv` | 04, section 2 | `plots.daytime_low_against_pv` |
-| Fig. 3: the daily daytime low against solar exposure, 2015, 2020 and 2025 | `figures/fig3`, `tables/fig3_fits.csv` | 04, section 3 | `plots.daytime_low_against_solar` |
+| Fig. 3: the daily daytime low against solar exposure (left) and against maximum temperature (right), 2015, 2020 and 2025 | `figures/fig3`, `tables/fig3_fits.csv` | 04, section 3 | `plots.daytime_low_against_solar_and_temperature` |
 | Fig. 4: POE bands on the annual daytime low, M2 to M5 | `figures/fig4` | 06, section 4 | `plots.poe_bands` |
-| Table I: the six models | `tables/table1.csv` | 05, section 3 | |
-| Table II: the daily out-of-sample test, the models and three pairs | `tables/table2.csv` | 08, section 6 | |
+| Table I: the six models, and whether each uses PV and weather | `tables/table1.csv` | 05, section 3 | |
+| Table II: the daily out-of-sample test: the mean absolute error of each model, and the change in per cent for three pairs | `tables/table2.csv` | 08, section 6 | |
 | Table III: one-year-ahead POE scores on the daytime low, six models, annual and monthly | `tables/table3.csv` | 06, section 2 | |
 | Straight-line fit of the annual daytime low on PV capacity and on the year | `tables/table_pv_fit.csv` | 04, section 2 | |
 | The four comparisons between models, on pinball loss | `tables/headline_numbers.csv` | 06, section 5 | |
@@ -113,19 +115,22 @@ All in `results/checks`.
 | Reporting thresholds of 90%, 95% and 98% | `sensitivity_thresholds.csv` | 07, section 3 |
 | The rescaled series: factors and annual lows | `sensitivity_rescale_factors.csv`, `sensitivity_rescaled_lows.csv` | 07, sections 4.1 and 4.2 |
 | The rescaled series: POE scores and the comparisons | `table3_daytime_low_rescaled.csv`, `table3_minimum_rescaled.csv`, `sensitivity_rescaled_comparisons.csv` | 07, sections 4.3 and 4.4 |
+| The mean error and the number of days of the daily test by model, which Table II leaves out | `daily_skill.csv` | 08, section 3 |
 | Table II by test year | `daily_skill_by_year.csv`, `daily_pairs_by_year.csv` | 08, sections 4 and 5 |
 
-Three checks hold the numbers of figures and a table the paper no longer shows but still refers
-to in a sentence: `check_annual_summary.csv` (annual maximum and energy), `check_low_hours.csv`
-(the daytime share of the lowest half hours) and `check_annual_minima.csv` (the annual minima
-with date, time and day type).
+Three checks hold numbers the paper no longer shows in a figure or table but still refers to in
+a sentence: `check_annual_summary.csv` (annual maximum and energy), `check_annual_minima.csv`
+(the annual minima with date, time and day type) and `daily_skill.csv` (the mean error of the
+daily test). `check_low_hours.csv` counts the half hours of panel (b) of Fig. 1 by trough window.
 
 ## Exploration and the archive
 
 Neither is used by the paper.
 
 - [exploration/01_conference](../../exploration/README.md), at the repository root, holds two
-  notebooks: the first looks at the models, and the figures the paper no longer uses.
+  notebooks: the first looks at the models, and earlier figures. One of those figures, the heat
+  map, is back in the paper as a panel of Fig. 1; it is drawn again in notebook 03, not taken
+  from there.
 - [archive/v1_straight_line_m4](archive/v1_straight_line_m4/README.md) holds the results and code
   as they stood before M4 was revised.
 

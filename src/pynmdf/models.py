@@ -65,14 +65,14 @@ SPECS = MODELS | M4_VARIANTS
 # Short labels for the paper's table of models.
 MODEL_INFO = pd.DataFrame(
     [
-        ("M1", "Naive", "Annual or monthly values", "No", "No", "Past errors"),
-        ("M2", "Time trend", "Daily lows", "No", "No", "Replay of past residuals"),
-        ("M3", "PV only", "Daily lows", "Yes", "No", "Replay of past residuals"),
-        ("M4", "PV + weather, linear", "Daily lows", "Yes", "Yes", "Weather replay and residuals"),
-        ("M5", "PV + weather, XGBoost", "Daily lows", "Yes", "Yes", "Weather replay and residuals"),
-        ("M6", "PV only, XGBoost", "Daily lows", "Yes", "No", "Replay of past residuals"),
+        ("M1", "Naive", "No", "No"),
+        ("M2", "Time trend", "No", "No"),
+        ("M3", "PV only", "Yes", "No"),
+        ("M4", "PV + weather, linear", "Yes", "Yes"),
+        ("M5", "PV + weather, XGBoost", "Yes", "Yes"),
+        ("M6", "PV only, XGBoost", "Yes", "No"),
     ],
-    columns=["ID", "Model", "Fitted on", "PV", "Weather", "POE from"],
+    columns=["ID", "Model", "PV", "Weather"],
 )
 
 

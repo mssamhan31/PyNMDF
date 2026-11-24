@@ -46,4 +46,4 @@ came from. An archive is a record: it is not rerun, refactored, linted or tidied
 
 ## Decision record
 
-`publication/01_conference/analysis_plan.md`: D31 to D36.
+`publication/01_conference/analysis_plan.md`: D31 to D36, D39 and D40.

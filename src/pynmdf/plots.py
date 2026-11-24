@@ -91,32 +91,60 @@ def save_figure(figure: Figure, folder: Path, name: str) -> None:
 
 
 # --------------------------------------------------------------------------------------------
-# The two annual lows and PV capacity
+# The two annual lows, when the lowest half hours occur, and PV capacity
 # --------------------------------------------------------------------------------------------
 
 
-def annual_lows_and_pv(annual: pd.DataFrame) -> Figure:
-    """The annual overnight and daytime lows (top) over PV capacity (bottom), by year.
+def annual_lows_hours_and_pv(annual: pd.DataFrame, hour_shares: pd.DataFrame) -> Figure:
+    """The two annual lows (a), when the lowest half hours occur (b) and PV capacity (c), by year.
 
-    Two panels share the year axis, in place of two y-axes on one panel: the lows are zoomed to
-    their own range, and PV capacity starts at zero.
+    Three panels share the year axis, in place of several y-axes on one panel: each quantity is
+    read against its own scale, and the three line up year by year. The lows are zoomed to their
+    own range, and PV capacity starts at zero.
 
     Args:
         annual: One row per year with ``overnight_low_mw``, ``daytime_low_mw`` and ``pv_mw``.
+        hour_shares: The output of ``targets.low_hour_shares`` for the same years: hours (rows)
+            by years (columns).
     """
-    figure, (lows, capacity) = plt.subplots(
-        2, 1, figsize=(ONE_COLUMN, 3.0), sharex=True, layout="constrained", height_ratios=[2.2, 1]
+    figure, (lows, hours, capacity) = plt.subplots(
+        3,
+        1,
+        figsize=(ONE_COLUMN, 4.7),
+        sharex=True,
+        layout="constrained",
+        height_ratios=[1.5, 2.1, 0.9],
     )
-    years = annual.index
-    series = {"overnight_low_mw": "Overnight low", "daytime_low_mw": "Daytime low"}
+    years = annual.index.to_numpy()
+    # In the paper's figures a low is labelled "minimum demand", the term the paper uses.
+    series = {
+        "overnight_low_mw": "Overnight minimum demand",
+        "daytime_low_mw": "Daytime minimum demand",
+    }
     for (column, label), (colour, marker, style) in zip(series.items(), SERIES):
         lows.plot(years, annual[column], color=colour, marker=marker, linestyle=style, label=label)
-    lows.set(ylabel="Annual low (MW)")
+    lows.set(ylabel="Minimum demand (MW)")
+
+    # One cell per year and clock hour, centred on its year like the points above it.
+    year_edges = np.append(years, years[-1] + 1) - 0.5
+    mesh = hours.pcolormesh(year_edges, np.arange(25), hour_shares[years], cmap=BLUES, vmin=0)
+    hours.set(ylabel="Hour of day", yticks=range(0, 25, 6), ylim=(0, 24))
+    hours.grid(False)
+    # The evening hours never hold a low, so the colour scale sits in that empty corner.
+    scale = hours.inset_axes([0.05, 0.82, 0.42, 0.035])
+    figure.colorbar(mesh, cax=scale, orientation="horizontal")
+    scale.set_title("Share of lowest 1% of half hours (%)", fontsize=8, loc="left", pad=3)
+    # Each band is named in the empty space level with it, with the word used for its line.
+    hours.text(years[-2], 4.5, "overnight", ha="center", va="center")
+    hours.text(years[2] + 0.5, 12.5, "daytime", ha="center", va="center")
 
     capacity.bar(years, annual["pv_mw"], width=0.6, color=LIGHT)
     capacity.set(xlabel="Year", ylabel="PV capacity (MW)", xticks=years[::2])
     for axis in (lows, capacity):
         axis.yaxis.set_major_formatter(THOUSANDS)
+    # A letter above each panel, so the paper can cite a panel on its own.
+    for axis, letter in zip((lows, hours, capacity), "abc"):
+        axis.set_title(f"({letter})", loc="left", fontsize=8, pad=2)
     figure.legend(loc="outside upper center", ncols=2, handlelength=2.4)
     return figure
 
@@ -212,7 +240,7 @@ def daytime_low_against_pv(points: pd.DataFrame, fit: pd.Series) -> Figure:
     axis.plot(
         points["pv_mw"], points["daytime_low_mw"], color=colour, marker=marker, linestyle="none"
     )
-    axis.set(xlabel="PV capacity at 30 June (MW)", ylabel="Annual daytime low (MW)")
+    axis.set(xlabel="PV capacity at 30 June (MW)", ylabel="Annual daytime minimum demand (MW)")
     axis.margins(0.08)
     axis.xaxis.set_major_formatter(THOUSANDS)
     axis.yaxis.set_major_formatter(THOUSANDS)
@@ -330,34 +358,46 @@ def low_duration(lowest: pd.DataFrame, years: list[int]) -> Figure:
     return figure
 
 
-def daytime_low_against_solar(daily: pd.DataFrame, solar_fits: pd.DataFrame) -> Figure:
-    """Each day's daytime low against its solar exposure, with a least-squares line per year.
+def daytime_low_against_solar_and_temperature(
+    daily: pd.DataFrame, solar_fits: pd.DataFrame
+) -> Figure:
+    """Each day's daytime low against its solar exposure (left) and maximum temperature (right).
+
+    Both panels plot the same quantity on the same days, so they share the y-axis. The left
+    panel adds a least-squares line per year to show how the slope changes. The right panel
+    uses the maximum temperature, the temperature of the daytime hours, and has no line.
 
     Args:
-        daily: One row per date with ``daytime`` (MW) and ``solar`` (MJ/m2).
+        daily: One row per date with ``daytime`` (MW), ``solar`` (MJ/m2) and ``tmax``
+            (degrees C). Only days that hold all three are drawn.
         solar_fits: The output of ``targets.yearly_line_fits`` for ``daytime`` on ``solar``; its
             index gives the years to draw.
     """
-    figure, axis = plt.subplots(figsize=(ONE_COLUMN, 2.6), layout="constrained")
+    figure, (solar, temperature) = plt.subplots(
+        1, 2, figsize=(ONE_COLUMN, 2.4), sharey=True, layout="constrained"
+    )
     handles = []
     for (year, fit), (colour, marker, style) in zip(solar_fits.iterrows(), SERIES):
-        days = daily[daily.index.year == year].dropna(subset=["solar", "daytime"])
-        axis.scatter(
-            days["solar"],
-            days["daytime"],
-            s=5,
-            color=colour,
-            marker=marker,
-            alpha=0.45,
-            linewidths=0,
-        )
+        days = daily[daily.index.year == year].dropna(subset=["daytime", "solar", "tmax"])
+        for axis, x in ((solar, "solar"), (temperature, "tmax")):
+            axis.scatter(
+                days[x],
+                days["daytime"],
+                s=3,
+                color=colour,
+                marker=marker,
+                alpha=0.45,
+                linewidths=0,
+            )
         ends = np.array([fit["x_min"], fit["x_max"]])
-        axis.plot(ends, fit["intercept"] + fit["slope"] * ends, color=colour, linestyle=style)
+        solar.plot(ends, fit["intercept"] + fit["slope"] * ends, color=colour, linestyle=style)
         # One legend entry per year, showing its marker and its line together.
         handles.append(Line2D([], [], color=colour, marker=marker, linestyle=style, label=year))
 
-    axis.set(xlabel="Solar exposure (MJ/m²)", ylabel="Daily daytime low (MW)")
-    axis.yaxis.set_major_formatter(THOUSANDS)
+    # In the paper's figures a low is labelled "minimum demand", the term the paper uses.
+    solar.set(xlabel="Solar exposure (MJ/m²)", ylabel="Daily daytime minimum demand (MW)")
+    temperature.set(xlabel="Maximum temperature (°C)")
+    solar.yaxis.set_major_formatter(THOUSANDS)
     figure.legend(handles=handles, loc="outside upper center", ncols=3, handlelength=2.4)
     return figure
 

@@ -16,7 +16,7 @@ First looks, superseded figures and experiments: work that no paper relies on.
 
 | Folder | Holds |
 |---|---|
-| `01_conference/` | Two notebooks from the conference study. `A1_model_exploration`: the first look at each model's POE50 (the middle probability of exceedance level) against the actuals, the day M3 predicts as lowest, and the miss on public holidays. `A2_superseded_figures`: figures the paper no longer uses |
+| `01_conference/` | Two notebooks from the conference study. `A1_model_exploration`: the first look at each model's POE50 (the middle probability of exceedance level) against the actuals, the day M3 predicts as lowest, and the miss on public holidays. `A2_superseded_figures`: figures the paper stopped using on 18 November 2026. One of them, the heat map of the lowest half hours, returned to the paper on 25 November 2026 as a panel of its Fig. 1, drawn again in its notebook 03 |
 
 Both notebooks read the cache of the conference study, so they run after its notebook 05. Their
 stored outputs are from the first version of the models, tagged `conference-v1-straight-line-m4`.

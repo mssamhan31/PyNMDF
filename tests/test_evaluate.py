@@ -80,16 +80,17 @@ def test_daily_skill_matches_hand_calculation():
     assert by_year.index.get_level_values("year").unique().tolist() == [2020, 2021]
 
     # --- The table of the daily test holds the same numbers: the models first, then the pair.
+    #     A model row is its mean absolute error in MW; a pair row is the change in per cent.
     table = evaluate.daily_table(errors, {"B against A": ("B", "A")})
     assert table.index.tolist() == ["A", "B", "B against A"]
-    assert table.loc["B", ["all_days_n", "all_days_mae_mw", "lowest_days_mae_mw"]].tolist() == [
-        20,
-        4.0,
-        20.0,
-    ]
-    assert np.isclose(table.loc["B against A", "all_days_mae_change_pct"], -20.0)
-    assert np.isclose(table.loc["B against A", "lowest_days_mae_difference_mw"], 15.0)
-    assert table.loc["B against A", ["all_days_mae_mw", "lowest_days_n"]].isna().all()
+    assert table.columns.tolist() == ["unit", "mae_all_days", "mae_lowest_days"]
+    assert table.loc["B"].tolist() == ["MW", 4.0, 20.0]
+    assert table.loc["B against A", "unit"] == "%"
+    assert np.isclose(table.loc["B against A", "mae_all_days"], -20.0)
+    assert np.isclose(table.loc["B against A", "mae_lowest_days"], 300.0)
+    # The pairs keep the order they are given in, not the order of their names.
+    in_order = {"B against A": ("B", "A"), "A against B": ("A", "B")}
+    assert evaluate.daily_table(errors, in_order).index.tolist() == ["A", "B", *in_order]
 
 
 def _synthetic_world(seed: int) -> tuple[pd.Series, pd.Series, pd.DataFrame]:

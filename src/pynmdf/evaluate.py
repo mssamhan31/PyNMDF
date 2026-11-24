@@ -543,23 +543,27 @@ def compare_daily(errors: pd.DataFrame, pairs: dict, by: tuple[str, ...] = ()) -
 
 
 def daily_table(errors: pd.DataFrame, pairs: dict) -> pd.DataFrame:
-    """Return the table of the daily test: each model's skill, then the pairs, for both day sets.
+    """Return the table of the daily test: each model's mean absolute error, then the pairs.
+
+    The table has the shape of the paper's table: one column per day set, with the models and
+    the pairs in the same two columns. So a column holds two kinds of number, and ``unit`` says
+    which a row holds. The mean error and the number of days are not in the table; they stay in
+    ``daily_skill``, which the notebook saves as a check.
 
     Args:
         errors: The output of ``daily_errors``.
         pairs: A name for each comparison, mapped to ``(model, reference)``.
 
     Returns:
-        One row per model and then one per comparison. Columns are ``<day set>_<measure>``,
-        the day set being ``all_days`` or ``lowest_days``. Model rows hold ``n`` (days),
-        ``mae_mw`` and ``mean_error_mw``; comparison rows hold ``mae_difference_mw`` and
-        ``mae_change_pct`` (negative when the first model misses by less).
+        One row per model and then one per comparison, in the order given. Columns are ``unit``,
+        ``mae_all_days`` and ``mae_lowest_days``. A model row holds its mean absolute error
+        (``unit`` is ``MW``). A comparison row holds the change in mean absolute error in per
+        cent (``unit`` is ``%``), negative when the first model misses by less.
     """
-    by_model = daily_skill(errors, ["model"]).rename(columns={"days": "n"})
-    by_pair = compare_daily(errors, pairs)[["difference_mw", "change_pct"]].add_prefix("mae_")
-    table = pd.concat([part.unstack("day_set") for part in (by_model, by_pair)])
-    # Put the two day sets side by side, each with its measures in the order built above.
-    table = table.swaplevel(axis=1)[DAY_SETS]
-    table.columns = [f"{day_set.replace(' ', '_')}_{name}" for day_set, name in table.columns]
-    counts = [name for name in table.columns if name.endswith("_n")]
-    return table.astype(dict.fromkeys(counts, "Int64")).rename_axis("row")
+    model_rows = daily_skill(errors, ["model"])["mae_mw"].unstack("day_set")
+    # Unstacking sorts rows by name, so the pairs are put back in the order they were given.
+    pair_rows = compare_daily(errors, pairs)["change_pct"].unstack("day_set").reindex(list(pairs))
+    table = pd.concat([model_rows.assign(unit="MW"), pair_rows.assign(unit="%")])
+    table = table[["unit", *DAY_SETS]]
+    table.columns = ["unit", *(f"mae_{day_set.replace(' ', '_')}" for day_set in DAY_SETS)]
+    return table.rename_axis("row")

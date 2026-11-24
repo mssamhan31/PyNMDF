@@ -15,12 +15,17 @@ capacity taken as known.
 
 ## 0. Reading guide
 
-The paper has four figures and three tables. Fig. 1 is the two annual lows over PV capacity;
-Fig. 2 the annual daytime low against PV capacity; Fig. 3 the daily daytime low against solar
-exposure; Fig. 4 the probability of exceedance (POE) bands on the annual daytime low. Table I lists the six models; Table II
+The paper has four figures and three tables. Fig. 1 has three panels on one year axis: the two
+annual lows, a heat map of when each year's lowest half hours occur, and PV capacity. Fig. 2 is
+the annual daytime low against PV capacity; Fig. 3 the daily daytime low against solar exposure
+and against maximum temperature; Fig. 4 the probability of exceedance (POE) bands on the annual
+daytime low. Table I lists the six models; Table II
 is the daily out-of-sample test; Table III holds the one-year-ahead POE scores on the daytime
 low. Numbers the paper states in a sentence, without a figure or table, come from the checks
 named beside them.
+
+The figures label a low as "minimum demand": the daytime low reads "daytime minimum demand".
+This document, the tables and the checks keep "low".
 
 ### 0.1 The paper's four points and where their evidence is
 
@@ -49,6 +54,7 @@ second half of point 4: on the monthly daytime low, M4 scores better than M3.
 | **After the scores were seen** | **Notebook 08**, the daily out-of-sample test, and its three pairs | D25 |
 | **After the scores were seen** | **The form of temperature in M4**: maximum and minimum temperature each as a V, in place of one straight term each, on the supervisor's advice. The knots were chosen on 2015 to 2018 only | D37 |
 | After the scores were seen | The diagnosis of M4 (M4 itself unchanged); the method of the rescaling; the straight-line fit of section 1.4 and Fig. 2; the fourth panel (M5) of Fig. 4 | D24, D22, D30, D27, D34 |
+| After the scores were seen | What the paper shows, with no number changed: the heat map returns as a panel of Fig. 1, and Fig. 3 gains a panel on maximum temperature; Table I loses two columns, and Table II the mean error and the number of days; the figures say "minimum demand" for a low | D39, D40 |
 
 ### 0.3 Four things to keep in view
 
@@ -65,7 +71,7 @@ second half of point 4: on the monthly daytime low, M4 scores better than M3.
 
 ## 1. Descriptive evidence
 
-### 1.1 The two lows and PV capacity by year (Fig. 1)
+### 1.1 The two lows and PV capacity by year (Fig. 1, panels a and c)
 
 | Year | Overnight low | Daytime low | PV capacity at 30 June |
 |---|---|---|---|
@@ -97,7 +103,10 @@ Annual maximum and energy, which the paper states in a sentence (check, not a fi
 
 Source: `results/checks/check_annual_summary.csv` (notebook 01).
 
-### 1.2 When the lowest 1% of half hours occur (check)
+### 1.2 When the lowest 1% of half hours occur (Fig. 1, panel b, and check)
+
+Panel (b) of Fig. 1 is a heat map of the share of each year's lowest 1% of half hours that start
+in each clock hour. The table is the same half hours counted by trough window.
 
 | Year | 2015 | 2016 | 2017 | 2018 | 2019 | 2020 | 2021 | 2022 | 2023 | 2024 | 2025 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -108,7 +117,8 @@ The lowest 1% is about 170 half hours a year; the remainder start outside both w
 days on which the daytime trough is the lower of the two: 0% up to 2020, then 0.9%, 3.4%, 17.8%,
 26.2% and 32.9% in 2021 to 2025.
 
-Sources: `results/checks/check_low_hours.csv` and `check_trough_windows.csv` (notebook 04).
+Sources: `results/tables/fig1_hours.csv` (the share by hour and year that the panel plots;
+notebook 03), `results/checks/check_low_hours.csv` and `check_trough_windows.csv` (notebook 04).
 
 ### 1.3 Each year's minimum (check)
 
@@ -148,7 +158,7 @@ scores were seen (D30).
 
 Sources: `results/tables/table_pv_fit.csv` and `fig2_data.csv` (notebook 04, section 2).
 
-### 1.5 The daily daytime low against solar exposure (Fig. 3)
+### 1.5 The daily daytime low against solar exposure (Fig. 3, left panel)
 
 | Year | Slope (MW per MJ/m²) | Days |
 |---|---|---|
@@ -157,6 +167,9 @@ Sources: `results/tables/table_pv_fit.csv` and `fig2_data.csv` (notebook 04, sec
 | 2025 | -35.4 | 360 |
 
 A least-squares line of each day's daytime low on that day's solar exposure, within one year.
+
+The right panel of Fig. 3 plots the same daytime lows against each day's maximum temperature, on
+the same days and the same y-axis. It has no fitted line, and no number is taken from it.
 
 Source: `results/tables/fig3_fits.csv` (notebook 04, section 3).
 
@@ -180,7 +193,9 @@ year's valid days with the lowest actual daytime low, 240 in all.
 | M5 PV + weather, XGBoost | 157.4 | +32.6 | 173.1 | -157.3 |
 | M6 PV only, XGBoost | 262.3 | -10.3 | 339.5 | -336.8 |
 
-MAE is the mean absolute error. On the lowest days the mean error is negative for every model
+MAE is the mean absolute error. Table II gives the two MAE columns; the mean error and the
+number of days are a check.
+On the lowest days the mean error is negative for every model
 partly by construction: the days are chosen for a low actual, so it compares models but does not
 measure bias.
 
@@ -200,8 +215,13 @@ days are almost all one-sided (MAE 339.5, mean error -336.8), as are M5's in 202
 -352.9): a tree model cannot follow PV capacity beyond the range it was fitted on (section 4.5), so
 part of the M5 against M6 gap is that handicap of M6 and not weather.
 
-Sources: `results/tables/table2.csv`; by year, `results/checks/daily_skill_by_year.csv` and
-`daily_pairs_by_year.csv` (notebook 08).
+In Table II the three pairs are the rows "Impact of PV in place of time (M3 against M2)",
+"Impact of weather, linear (M4 against M3)" and "Impact of weather, XGBoost (M5 against M6)".
+Each holds the change in per cent, in the same two columns as the MAE of the models.
+
+Sources: `results/tables/table2.csv` (the MAE of each model and the change for each pair);
+`results/checks/daily_skill.csv` (the mean error and the number of days); by year,
+`results/checks/daily_skill_by_year.csv` and `daily_pairs_by_year.csv` (notebook 08).
 
 ## 3. One-year-ahead POE scores (Table III)
 

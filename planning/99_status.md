@@ -3,7 +3,7 @@
 Where the repository stands. The first two sections are rewritten whenever the state changes.
 The log gains one entry per finished step, newest first.
 
-## Now (24 November 2026)
+## Now (25 November 2026)
 
 - **Step in hand:** none. All six steps of the [plan](03_planning.md) are done; what is left
   is in its backlog.
@@ -14,12 +14,13 @@ The log gains one entry per finished step, newest first.
 - **Review gate:** publishable, with no blocker. Its questions are answered and its findings
   are fixed, except the continuous integration workflow, which stays in the backlog.
 - **Branch:** `main`, pushed to `origin`. The work of 24 November 2026 was done on
-  `piecewise-m4-and-restructure` and merged.
+  `piecewise-m4-and-restructure` and merged; that of 25 November 2026 on
+  `heatmap-and-temperature-figures`, also merged.
 - **Tag:** `conference-v1-straight-line-m4` on `71c3cb3`, the commit the first results came
   from. Pushed.
 - **Results:** in `publication/01_conference/results`, committed, with M4 taking maximum and
   minimum temperature each as a V. Every number of M1, M2, M3, M5 and M6 is identical to the
-  archived copy.
+  archived copy. The paper set is four figures and three tables, as revised by D39 and D40.
 
 ### Where the repository differs from the spec
 
@@ -41,6 +42,30 @@ Decided on 24 November 2026, after the review:
 - The name is "Python for Network Minimum Demand Forecasting".
 
 ## Log
+
+### 25 November 2026: what the paper shows
+
+- Fig. 1 has three panels on one year axis (D39): the two annual lows, the heat map of the
+  lowest half hours, which had been archived, and PV capacity. Fig. 3 has two panels on one
+  y-axis: the daily daytime low against solar exposure and against maximum temperature. The
+  set stays at four figures and three tables, with the same numbers.
+- A five-figure set, with the heat map as a figure of its own, was drawn first and set aside
+  the same day, before anything was committed.
+- Table I loses "Fitted on" and "POE from". Table II has the shape of the paper's table: the
+  mean absolute error of each model, and the change in per cent for three pairs named "Impact
+  of ... (Mx against My)". The mean error and the number of days are kept as a new check,
+  `daily_skill.csv` (D40).
+- In the four figures a low is labelled "minimum demand". The text, the tables and the checks
+  keep "low".
+- Not a step of the plan, and not a change of method. In the package: `plots` has
+  `annual_lows_hours_and_pv` and `daytime_low_against_solar_and_temperature` in place of the
+  two functions that drew the old Fig. 1 and Fig. 3; `evaluate.daily_table` builds the new
+  Table II, with its test. 12 tests pass.
+- Notebooks 03, 04, 05, 06 and 08 were rerun and written back. Checked: no number changed.
+  `fig1_hours.csv` is identical to the archived heat map data; `fig1_data.csv`,
+  `fig2_data.csv` and `fig3_fits.csv` did not change; the numbers of Table II and of the
+  pairs by year are those of before; every other table and check is byte-identical.
+- Done on the branch `heatmap-and-temperature-figures`, merged into `main` and pushed.
 
 ### 24 November 2026: public
 
