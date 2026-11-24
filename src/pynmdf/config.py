@@ -11,9 +11,9 @@ import yaml
 
 CONFIG_NAMES = ("config.local.yaml", "config.example.yaml")
 # Where results go. ``figures`` and ``tables`` hold the paper's artifacts, ``checks`` what its
-# limitation and robustness statements rely on, and ``archive`` superseded and exploratory
-# results. ``interim`` is cached data passed between notebooks.
-OUTPUT_FOLDERS = ("interim", "figures", "tables", "checks", "archive")
+# limitation and robustness statements rely on, and ``exploration`` first looks and superseded
+# figures. ``interim`` is cached data passed between notebooks.
+OUTPUT_FOLDERS = ("interim", "figures", "tables", "checks", "exploration")
 
 
 def find_root(start: Path | None = None) -> Path:
@@ -21,7 +21,7 @@ def find_root(start: Path | None = None) -> Path:
 
     Args:
         start: Folder to search from. Defaults to the current working directory, which is
-            ``notebooks/`` when a notebook runs.
+            the notebook's own folder when a notebook runs.
     """
     here = (start or Path.cwd()).resolve()
     for folder in (here, *here.parents):
@@ -38,8 +38,8 @@ def load_config(start: Path | None = None) -> dict:
 
     Returns:
         The configuration as a dictionary, with two additions: ``root`` (repository root) and
-        ``dirs`` (absolute paths of the interim, figures, tables, checks and archive folders,
-        created if absent).
+        ``dirs`` (absolute paths of the interim, figures, tables, checks and exploration
+        folders, created if absent).
     """
     root = find_root(start)
     name = next(name for name in CONFIG_NAMES if (root / name).exists())

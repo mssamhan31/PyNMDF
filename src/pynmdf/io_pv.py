@@ -7,7 +7,7 @@ found by its header text and the label of the Total row, never by position.
 
 FY2015 and FY2016 give one capacity column. From FY2017 there are two, residential and
 non-residential, and network capacity is their sum. The single early column is taken to cover
-both (a decision recorded in ``docs/analysis_plan.md``).
+both (a decision recorded in ``publication/01_conference/analysis_plan.md``).
 """
 
 from pathlib import Path

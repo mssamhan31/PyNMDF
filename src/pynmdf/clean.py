@@ -1,7 +1,7 @@
 """Clean the zone substation data and build the network total.
 
 The steps below are applied to each reporting-year file, in this order
-(``docs/analysis_plan.md``, sections 3 and 5):
+(``publication/01_conference/analysis_plan.md``, sections 3 and 5):
 
 0. Column order. Days published with their 96 values in alphabetical order of interval number
    are put back in time order (most substations in April 2023).

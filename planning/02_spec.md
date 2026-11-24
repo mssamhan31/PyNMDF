@@ -3,11 +3,11 @@
 What the repository holds and the rules it follows. This page is the overview; each component
 has a short detail page under [spec/](spec/), to be read only when needed.
 
-> **Not yet true.** This spec describes the repository after steps 2 to 5 of the
-> [plan](03_planning.md). Two things differ today: the files are still in the old layout
-> (`notebooks/`, `docs/`, `outputs/` at the root), and M4 and M5 still use maximum and minimum
-> temperature as straight terms. The [status](99_status.md) tracks the gap. This note is removed
-> when the gap closes.
+> **Not yet true.** This spec describes the repository after steps 4 and 5 of the
+> [plan](03_planning.md). Two things differ today: M4 and M5 still use maximum and minimum
+> temperature as straight terms, and there is no `LICENSE` and no README for the publication
+> folder yet. The [status](99_status.md) tracks the gap. This note is removed when the gap
+> closes.
 
 ## Layout
 

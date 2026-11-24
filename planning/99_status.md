@@ -5,21 +5,20 @@ The log gains one entry per finished step, newest first.
 
 ## Now (24 November 2026)
 
-- **Step in hand:** step 3 of the [plan](03_planning.md), restructure.
-- **Done:** step 1 (planning documents and `AGENTS.md`) and step 2 (archive of the current
-  version).
+- **Step in hand:** step 4 of the [plan](03_planning.md), revise M4 and M5.
+- **Done:** step 1 (planning documents and `AGENTS.md`), step 2 (archive of the current
+  version) and step 3 (restructure).
 - **Branch:** `piecewise-m4-and-restructure`, cut from `main` at `71c3cb3`. There is no remote;
   nothing has been pushed.
 - **Tag:** `conference-v1-straight-line-m4` on `71c3cb3`, the commit the current results came
   from.
-- **Results on disk:** those of commit `71c3cb3`, with M4 using straight temperature terms.
+- **Results:** in `publication/01_conference/results`, committed, with M4 using straight
+  temperature terms. They are identical to the archived copy.
 
 ### Where the repository differs from the spec
 
 | Spec says | Today | Closed by |
 |---|---|---|
-| Layout with `publication/`, `exploration/` and `planning/` | `notebooks/`, `docs/`, `outputs/` and `data/` at the root | Step 3 |
-| Results are committed | `outputs/` is git-ignored | Step 3 |
 | M4 uses mean temperature as a V; M5 uses mean temperature | Both use `tmax` and `tmin` as straight terms | Step 4 |
 | `LICENSE`, a front-page README and a README per publication | No licence; one long README | Step 5 |
 
@@ -32,6 +31,22 @@ The log gains one entry per finished step, newest first.
 | Whether the plan and status pages are published with the rest of `planning/` | Step 6 |
 
 ## Log
+
+### 24 November 2026: repository restructured
+
+- Moved to the layout in the spec: notebooks, documents, results and cache under
+  `publication/01_conference/`; the two exploration notebooks and their outputs under
+  `exploration/01_conference/`. Git records every tracked move as a rename.
+- Paths corrected in both config files, the package docstrings, the notebook text, the results
+  summary, the root README and `.gitignore`. The config key `archive` is now `exploration`.
+  `analysis_plan.md` is left as written, with a dated note that maps old paths to new ones.
+- Results are now committed; the cache and the exploration outputs stay git-ignored.
+- Checked: notebooks 01 to 08 were run from their new folder (317 seconds). All 45 result files
+  (8 tables, 29 checks, 8 figures) are byte-identical to the archived copy. The tests, the
+  linter and the formatter check pass.
+- Not done, by design: the executed notebooks were not written back, so the stored outputs in
+  the tracked notebooks are those of the earlier run; the exploration notebooks were not rerun.
+- No logic and no number changed.
 
 ### 24 November 2026: current version archived
 
@@ -57,8 +72,8 @@ The log gains one entry per finished step, newest first.
 - Commit `d6408a2`: eight notebooks, six models, results summary.
 - Commit `71c3cb3`: the paper's set becomes four figures and three tables; what it replaced is
   archived.
-- The full record of this period is `docs/analysis_plan.md`: decisions D1 to D36 and findings
-  F1 to F11.
+- The full record of this period is `publication/01_conference/analysis_plan.md`: decisions D1
+  to D36 and findings F1 to F11.
 
 ### 11 to 12 November 2026: plan and design
 

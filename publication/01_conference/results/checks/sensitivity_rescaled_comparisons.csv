@@ -1,0 +1,17 @@
+comparison,target,level,published,rescaled,same_direction
+H1: PV against time,daytime_low,annual,25.007262084738556,198.22403271196367,True
+H1: PV against time,daytime_low,monthly,-7.361618721475938,39.61608920823192,False
+H1: PV against time,minimum,annual,34.051929047980536,188.16072845681268,True
+H1: PV against time,minimum,monthly,10.322083753284495,49.83027313172881,True
+H2: weather on top of PV,daytime_low,annual,46.74850545954317,38.72935815059804,True
+H2: weather on top of PV,daytime_low,monthly,4.462934650435546,19.807232030824153,True
+H2: weather on top of PV,minimum,annual,44.2341364664399,49.627719309015525,True
+H2: weather on top of PV,minimum,monthly,6.622767869733348,22.243342627121866,True
+Model form: XGBoost against linear,daytime_low,annual,-55.143916115155676,-82.80508486457153,True
+Model form: XGBoost against linear,daytime_low,monthly,-17.27465051483791,-35.618169242173515,True
+Model form: XGBoost against linear,minimum,annual,-55.201397036803066,-81.14014083757006,True
+Model form: XGBoost against linear,minimum,monthly,-26.32825841374906,-48.15641227582059,True
+Supplementary: weather in tree form,daytime_low,annual,-22.185283048873995,-20.783121710495823,True
+Supplementary: weather in tree form,daytime_low,monthly,-42.95295814365292,-43.57653176960255,True
+Supplementary: weather in tree form,minimum,annual,-4.007992858893972,-4.8009052813127955,True
+Supplementary: weather in tree form,minimum,monthly,-22.95706906864735,-33.397112455791365,True

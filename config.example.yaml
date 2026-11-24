@@ -1,7 +1,7 @@
 # PyNMDF configuration.
 #
 # Copy this file to config.local.yaml (git-ignored) and edit the paths under `paths`.
-# Everything else is a decision recorded in docs/analysis_plan.md: change it only to test
+# Everything else is a decision recorded in publication/01_conference/analysis_plan.md: change it only to test
 # sensitivity. Sections are added as the notebooks that use them are built.
 
 paths:
@@ -44,12 +44,13 @@ paths:
     tmin: "Daily minimum temperature/IDCJAC0011_066037_1800_Data.csv"
     solar: "Global solar exposure kwh m-2/IDCJAC0016_066037_1800_Data.csv"
 
-  # Outputs, relative to the repository root. All git-ignored.
-  interim: "data/interim"
-  figures: "outputs/figures"
-  tables: "outputs/tables"       # paper tables, named by their number in the paper
-  checks: "outputs/checks"       # what the limitation and robustness statements rely on
-  archive: "outputs/archive"     # superseded and exploratory results (notebooks/archive)
+  # Outputs, relative to the repository root. Figures, tables and checks are committed; the
+  # cache and the exploration outputs are git-ignored.
+  interim: "publication/01_conference/data/interim"
+  figures: "publication/01_conference/results/figures"
+  tables: "publication/01_conference/results/tables"    # paper tables, named by their number in the paper
+  checks: "publication/01_conference/results/checks"    # what the limitation and robustness statements rely on
+  exploration: "exploration/01_conference/outputs"      # first looks and superseded figures
 
 study:
   first_year: 2015          # calendar years

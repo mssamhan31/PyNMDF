@@ -12,11 +12,12 @@ inputs are public.
 
 Two documents sit beside this one:
 
-- [docs/results_summary.md](docs/results_summary.md): the numbers behind the paper, by type of
-  evidence, each with the file it comes from.
-- [docs/analysis_plan.md](docs/analysis_plan.md): the design, and the record of every decision
-  and finding made while building (D1 to D36, F1 to F11). Its seventh round holds the key from
-  the paper's earlier figure and table numbers to the current ones.
+- [publication/01_conference/results_summary.md](publication/01_conference/results_summary.md):
+  the numbers behind the paper, by type of evidence, each with the file it comes from.
+- [publication/01_conference/analysis_plan.md](publication/01_conference/analysis_plan.md): the
+  design, and the record of every decision and finding made while building (D1 to D36, F1 to
+  F11). Its seventh round holds the key from the paper's earlier figure and table numbers to the
+  current ones.
 
 ## Install
 
@@ -50,17 +51,17 @@ $notebooks = "01_demand_network_total", "02_pv_and_weather", "03_fig1_introducti
     "04_results_data_insights", "05_backtest_models", "06_results_forecast_comparison",
     "07_robustness_and_sensitivity", "08_daily_out_of_sample"
 foreach ($name in $notebooks) {
-    .venv\Scripts\jupyter nbconvert --to notebook --execute --inplace "notebooks\$name.ipynb"
+    .venv\Scripts\jupyter nbconvert --to notebook --execute --inplace "publication\01_conference\notebooks\$name.ipynb"
 }
 ```
 
 Notebook 01 reads every raw demand file and takes a few minutes; notebooks 05 and 07 take a
-minute or two each; the others are quick. The two archive notebooks are optional and run the
+minute or two each; the others are quick. The two exploration notebooks are optional and run the
 same way, after notebook 05:
 
 ```powershell
 foreach ($name in "A1_model_exploration", "A2_superseded_figures") {
-    .venv\Scripts\jupyter nbconvert --to notebook --execute --inplace "notebooks\archive\$name.ipynb"
+    .venv\Scripts\jupyter nbconvert --to notebook --execute --inplace "exploration\01_conference\$name.ipynb"
 }
 ```
 
@@ -80,26 +81,28 @@ Tests, linter and formatter:
 ## Reproduce the main result
 
 After the eight notebooks have run, the one-year-ahead comparison is in
-`outputs/tables/table3.csv` (pinball loss and coverage of the six models on the daytime low) and
-`outputs/tables/headline_numbers.csv` (the four comparisons between models). The daily
-out-of-sample test is in `outputs/tables/table2.csv`. `docs/results_summary.md` lists every
-number the paper relies on with its file.
+`publication/01_conference/results/tables/table3.csv` (pinball loss and coverage of the six
+models on the daytime low) and `headline_numbers.csv` in the same folder (the four comparisons
+between models). The daily out-of-sample test is in `table2.csv`, also there.
+`publication/01_conference/results_summary.md` lists every number the paper relies on with its
+file.
 
 ## Where results go
 
 | Folder | Holds |
 |---|---|
-| `outputs/figures`, `outputs/tables` | The paper's figures and tables, named by their number in the paper, with the data behind the figures |
-| `outputs/checks` | Everything the paper's limitation and robustness statements, and its sentences without a figure, rely on |
-| `outputs/archive` | Superseded figures and exploration, written by `notebooks/archive` and named for what they show |
-| `data/interim` | Cached data passed between notebooks |
+| `publication/01_conference/results/figures`, `.../results/tables` | The paper's figures and tables, named by their number in the paper, with the data behind the figures |
+| `publication/01_conference/results/checks` | Everything the paper's limitation and robustness statements, and its sentences without a figure, rely on |
+| `exploration/01_conference/outputs` | Superseded figures and exploration, written by the notebooks in `exploration/01_conference` and named for what they show |
+| `publication/01_conference/data/interim` | Cached data passed between notebooks |
 
-All four are git-ignored and rebuilt by the notebooks. Figures are saved as PNG (600 dpi) and
-PDF, tables and checks as CSV.
+Figures, tables and checks are committed. The cache and the exploration outputs are git-ignored
+and rebuilt by the notebooks. Figures are saved as PNG (600 dpi) and PDF, tables and checks as
+CSV.
 
 ## Paper artifacts
 
-Four figures and three tables.
+Four figures and three tables. Files are under `publication/01_conference/results`.
 
 | Artifact | File | Notebook | Drawn by |
 |---|---|---|---|
@@ -115,7 +118,7 @@ Four figures and three tables.
 
 ## Supporting checks
 
-All in `outputs/checks`.
+All in `publication/01_conference/results/checks`.
 
 | Check | File | Notebook |
 |---|---|---|
@@ -150,12 +153,12 @@ to in a sentence: `check_annual_summary.csv` (annual maximum and energy), `check
 (the daytime share of the lowest half hours) and `check_annual_minima.csv` (the annual minima
 with date, time and day type).
 
-## The archive
+## Exploration
 
-`notebooks/archive` holds two notebooks that write to `outputs/archive`. Nothing in the archive
-is used by the paper or by its limitation and robustness statements; it is kept so that earlier
-versions and exploration stay reproducible. Archived files are named for what they show, not by
-a figure number, so that none can be mistaken for a current figure of the paper.
+`exploration/01_conference` holds two notebooks that write to `exploration/01_conference/outputs`.
+Nothing there is used by the paper or by its limitation and robustness statements; it is kept as
+a record of earlier figures and first looks. Its files are named for what they show, not by a
+figure number, so that none can be mistaken for a current figure of the paper.
 
 | Notebook | Holds |
 |---|---|
@@ -167,10 +170,17 @@ a figure number, so that none can be mistaken for a current figure of the paper.
 ```
 config.example.yaml      raw-data paths and every decision parameter (committed)
 config.local.yaml        your real paths (git-ignored)
-docs/analysis_plan.md    the design and the record of every decision taken while building
-docs/results_summary.md  the numbers behind the paper, by type of evidence
-docs/                    the author's own notes (decision_log.md, substation_set_decisions.md,
+planning/                intent, spec, plan and status of the repository
+publication/01_conference/
+  analysis_plan.md       the design and the record of every decision taken while building
+  results_summary.md     the numbers behind the paper, by type of evidence
+  notes/                 the author's own notes (decision_log.md, substation_set_decisions.md,
                          public_cross_check.md)
+  notebooks/             the eight main notebooks: paper artifacts and supporting checks only
+  results/               figures, tables and checks (committed)
+  data/interim/          cached parquet (git-ignored)
+  archive/               the results and code as they stood before a model revision
+exploration/01_conference/   two notebooks for superseded figures and exploration
 src/pynmdf/              the logic, as a small importable package
   config.py              load the configuration and prepare the output folders
   io_demand.py           read every zone substation file layout
@@ -182,11 +192,7 @@ src/pynmdf/              the logic, as a small importable package
   poe.py                 POE10, POE50 and POE90: past errors for M1, the replay for M2 to M6
   evaluate.py            rolling-origin backtest, scores, comparisons, checks and daily skill
   plots.py               shared figure style; one function per figure, named for what it draws
-notebooks/               the eight main notebooks: paper artifacts and supporting checks only
-notebooks/archive/       two notebooks for superseded figures and exploration
 tests/                   pytest tests on synthetic data
-data/interim/            cached parquet (git-ignored)
-outputs/                 figures, tables, checks and archive (git-ignored)
 ```
 
 Every main notebook opens with the paper artifacts and the supporting checks it produces.

@@ -1,7 +1,8 @@
-# Data and results are never committed: Ausgrid and BOM keep copyright in the raw files,
-# and everything derived from them is rebuilt by the notebooks.
+# The cache under data/ is rebuilt by the notebooks from the public files.
 data/
-outputs/
+
+# Exploration outputs are rebuilt by the exploration notebooks.
+exploration/**/outputs/
 
 # Real local paths
 config.local.yaml
