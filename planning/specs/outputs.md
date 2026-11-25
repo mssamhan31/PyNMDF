@@ -1,18 +1,17 @@
-# Spec: outputs
+# Outputs
 
-Back to the [spec](../02_spec.md).
+Back to the [spec index](../02_spec.md).
 
 ## Purpose
 
 Say what the notebooks write, where it goes and what is committed.
 
-## Code
+**Code.** `src/pynmdf/plots.py` (figures), `src/pynmdf/config.py` (folders) and the notebooks.
 
-`src/pynmdf/plots.py` (figures), `src/pynmdf/config.py` (folders) and the notebooks.
+## Outputs
 
-## Where things go
-
-Folders are entries under `paths` in the config, relative to the repository root.
+Where things go. Folders are entries under `paths` in the config, relative to the repository
+root.
 
 | Folder | Holds | Committed |
 |---|---|---|
@@ -26,7 +25,7 @@ The map from each notebook to the files it writes is in
 `publication/01_conference/README.md`. Every number the paper relies on is listed with its file
 in `publication/01_conference/results_summary.md`.
 
-## Rules
+## Constraints
 
 - **Notebooks do no logic.** They call the package, show results and save outputs.
 - **Results are never edited by hand.** They change only when a notebook is rerun.
@@ -37,13 +36,9 @@ in `publication/01_conference/results_summary.md`.
   draws.
 - **Every result file is a small summary.** No result file holds a half-hourly series or a
   value for a single substation.
+- **Earlier versions.** When a revision replaces published-quality results, the old results and
+  the code that made them are copied once into the publication's `archive/` folder, with a
+  README naming the commit they came from. An archive is a record: it is not rerun, refactored,
+  linted or tidied.
 
-## Earlier versions
-
-When a revision replaces published-quality results, the old results and the code that made them
-are copied once into the publication's `archive/` folder, with a README naming the commit they
-came from. An archive is a record: it is not rerun, refactored, linted or tidied.
-
-## Decision record
-
-`publication/01_conference/analysis_plan.md`: D31 to D36, and D39 to D41.
+**Decision record.** `publication/01_conference/analysis_plan.md`: D31 to D36, and D39 to D41.

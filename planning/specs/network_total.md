@@ -1,18 +1,26 @@
-# Spec: network total
+# Network total
 
-Back to the [spec](../02_spec.md).
+Back to the [spec index](../02_spec.md).
 
 ## Purpose
 
 Clean the zone substation files and sum them into one half-hourly series: the "network total".
 It is the sum of the published zone substations, not the whole Ausgrid network.
 
-## Code
+**Code.** `src/pynmdf/clean.py`. One small function per step, composed by `clean_reporting_year`
+and `build_network_total`.
 
-`src/pynmdf/clean.py`. One small function per step, composed by `clean_reporting_year` and
-`build_network_total`.
+## Outputs
 
-## Steps
+- The 15-minute total with its reporting share, and the half-hourly total (both cached).
+- One row per file of the data-quality table.
+- Three measures of faults in the published files that are **not corrected**: the level step
+  where reporting years join at 1 May, substations that appear to stay on standard time from
+  FY2024, and reverse flow recorded without its sign before May 2023.
+- A rescaled series in which the 1 May steps are closed. It is a bounding case, not a
+  correction, and is used only for a sensitivity check.
+
+## Process
 
 Applied to each reporting-year file on its own, in this order:
 
@@ -30,23 +38,11 @@ Applied to each reporting-year file on its own, in this order:
 
 The approach follows Haghdadi et al. (2018), <https://doi.org/10.1109/TSTE.2017.2751647>.
 
-## Outputs
-
-- The 15-minute total with its reporting share, and the half-hourly total (both cached).
-- One row per file of the data-quality table.
-- Three measures of faults in the published files that are **not corrected**: the level step
-  where reporting years join at 1 May, substations that appear to stay on standard time from
-  FY2024, and reverse flow recorded without its sign before May 2023.
-- A rescaled series in which the 1 May steps are closed. It is a bounding case, not a
-  correction, and is used only for a sensitivity check.
-
-## Rules
+## Constraints
 
 - Every threshold is a parameter under `cleaning` in the config.
 - Nothing is invented: a dropped substation is not replaced, and long gaps stay blank.
 
-## Decision record
-
-`publication/01_conference/analysis_plan.md`: decisions D1 to D5 and D10, findings F1 and F2.
-`publication/01_conference/notes/substation_set_decisions.md` explains why the set of
-substations is not fixed.
+**Decision record.** `publication/01_conference/analysis_plan.md`: decisions D1 to D5 and D10,
+findings F1 and F2. `publication/01_conference/notes/substation_set_decisions.md` explains why
+the set of substations is not fixed.

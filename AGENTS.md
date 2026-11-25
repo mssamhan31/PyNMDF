@@ -8,11 +8,26 @@ capacity grows. It holds one shared package and one folder per publication.
 
 ## Start here
 
-1. [planning/99_status.md](planning/99_status.md): where the work stands, and where the
-   repository still differs from its spec.
-2. [planning/01_intent.md](planning/01_intent.md), [02_spec.md](planning/02_spec.md) and
-   [03_planning.md](planning/03_planning.md): why, what and how. The spec and the plan link to
-   detail pages; read a detail page only when the task needs it.
+1. [planning/00_status.md](planning/00_status.md): where the work stands, the active change
+   and what is queued.
+2. [planning/01_intent.md](planning/01_intent.md) and [02_spec.md](planning/02_spec.md): why
+   and what. The spec links to one page per capability under `planning/specs/`; read a page
+   only when the task needs it.
+3. [planning/README.md](planning/README.md): how the planning folder works, and the workflow
+   of a change.
+
+## Planning
+
+The workflow is in [planning/README.md](planning/README.md). A fix that takes under an hour
+skips it and gets a commit message only.
+
+- Read planning/00_status.md first, then the active change folder, then only the specs/ files
+  the delta names.
+- Never build anything that is not in the active change's 2_spec-delta.md.
+- During build, edit only the Tasks section of 3_plan.md. Do not edit 1_intent.md.
+- Update specs/ only at Finish, by merging the delta.
+- Do not modify an existing test without approval.
+- If a task conflicts with a constraint in specs/ or 02_spec.md, stop and flag it.
 
 ## The red lines
 
@@ -34,6 +49,7 @@ capacity grows. It holds one shared package and one folder per publication.
   its random draws, so inserting one changes the numbers of every model after it.
 - `exploration/` is a record of first looks. Its notebooks are not rerun when the package
   changes, and nothing in a publication folder may depend on it.
+- `planning/changes/archive/` holds finished changes as they were written. Do not edit them.
 - Three faults in the published demand files are measured and reported but not corrected. That
   is a recorded decision, not an oversight.
 
@@ -76,9 +92,10 @@ call the package, show results and save outputs.
 
 ## Keeping the documents true
 
-A change that makes a page under `planning/` untrue updates that page in the same change.
-`planning/99_status.md` gains a log entry when a step of the plan is finished. A README is
-updated in the same change that makes it out of date.
+A README is updated in the same change that makes it out of date. The pages under `planning/`
+are brought up to date when a change is finished: its delta is merged into `specs/`, its folder
+moves to `changes/archive/` and `00_status.md` is rewritten. A fix that skips the workflow
+still updates any planning page it makes untrue, in the same commit.
 
 ## Git
 

@@ -1,21 +1,31 @@
-# Spec: data sources
+# Data sources
 
-Back to the [spec](../02_spec.md).
+Back to the [spec index](../02_spec.md).
 
 ## Purpose
 
 Read each public source into one standard shape. Nothing else in the package knows how a
 source's files are laid out.
 
-## The three sources
+## Inputs
 
-| Source | Module | Reads | Returns |
-|---|---|---|---|
-| Demand | `io_demand.py` | Ausgrid distribution zone substation data: one archive per reporting year (1 May to 30 April), one CSV per substation, one row per day, 96 columns of 15-minute MW | `read_reporting_year`: one wide frame per reporting year, 15-minute MW, one row per interval start, one column per substation |
-| PV capacity | `io_pv.py` | Ausgrid "average electricity use" workbooks by local government area: network solar capacity (kWp) at 30 June of each year | `pv_capacity_series`: capacity at each 30 June. `daily_pv`: daily capacity in MW, interpolated between those dates |
-| Weather | `io_weather.py` | Bureau of Meteorology Climate Data Online, station 066037 (Sydney Airport AMO): daily maximum temperature, minimum temperature and global solar exposure | `read_weather`, `fill_weather`: daily `tmax`, `tmin`, `tmean` (degrees C) and `solar` (MJ/m2), gaps of up to 3 days filled |
+The three sources:
 
-## Rules
+| Source | Module | Reads |
+|---|---|---|
+| Demand | `io_demand.py` | Ausgrid distribution zone substation data: one archive per reporting year (1 May to 30 April), one CSV per substation, one row per day, 96 columns of 15-minute MW |
+| PV capacity | `io_pv.py` | Ausgrid "average electricity use" workbooks by local government area: network solar capacity (kWp) at 30 June of each year |
+| Weather | `io_weather.py` | Bureau of Meteorology Climate Data Online, station 066037 (Sydney Airport AMO): daily maximum temperature, minimum temperature and global solar exposure |
+
+## Outputs
+
+| Source | Module | Returns |
+|---|---|---|
+| Demand | `io_demand.py` | `read_reporting_year`: one wide frame per reporting year, 15-minute MW, one row per interval start, one column per substation |
+| PV capacity | `io_pv.py` | `pv_capacity_series`: capacity at each 30 June. `daily_pv`: daily capacity in MW, interpolated between those dates |
+| Weather | `io_weather.py` | `read_weather`, `fill_weather`: daily `tmax`, `tmin`, `tmean` (degrees C) and `solar` (MJ/m2), gaps of up to 3 days filled |
+
+## Constraints
 
 - **Time.** Local clock time, as published. Series are indexed by interval start; tables report
   the time an interval ends, to match Ausgrid's column labels.
@@ -27,6 +37,8 @@ source's files are laid out.
   confidential data is read.
 - **Paths.** The files are downloaded from their sources and read from the paths in
   `config.local.yaml`.
+
+**Decision record.** `publication/01_conference/analysis_plan.md`, sections 2 and 5.
 
 ## Where a new source plugs in
 
@@ -43,7 +55,3 @@ sources and would need a counterpart: `clean.py` repairs faults of the Ausgrid f
 public holiday calendar is Australian (`targets.public_holidays`).
 
 Nothing has been built for a second source. This section records where it would go.
-
-## Decision record
-
-`publication/01_conference/analysis_plan.md`, sections 2 and 5.

@@ -1,9 +1,15 @@
-# 02 Spec
+# Spec index
 
-What the repository holds and the rules it follows. This page is the overview; each component
-has a short detail page under [spec/](spec/), to be read only when needed.
+What the repository holds and the rules it follows. This page is the index; each capability
+has a short page under [specs/](specs/), to be read only when needed.
 
-## Layout
+## System overview
+
+- One shared Python package, `pynmdf`, which holds the logic.
+- One folder per publication, with that paper's notebooks, results and decision record.
+- One folder for exploration: work that no paper relies on.
+
+### Layout
 
 ```
 AGENTS.md  LICENSE  README.md  pyproject.toml  requirements.txt
@@ -11,9 +17,9 @@ config.example.yaml              raw-data paths and every decision parameter (co
 config.local.yaml                the real local paths (git-ignored)
 src/pynmdf/                      the shared package: all logic lives here
 tests/                           pytest tests on synthetic data
-planning/                        intent, spec, plan and status
-  spec/                          one page per component
-  plan/                          one page per step of work
+planning/                        status, intent, spec and the record of each change
+  specs/                         one page per capability
+  changes/                       one folder per change; the finished ones under archive/
 publication/01_conference/       everything that belongs to the conference paper
   README.md                      how to reproduce the paper, and what each file is
   analysis_plan.md               the design and the decision record (D and F numbers)
@@ -29,20 +35,7 @@ exploration/                     work that no paper relies on
 
 `docs/` is left free for a website.
 
-## Components
-
-| Component | Code | What it does | Detail |
-|---|---|---|---|
-| Data sources | `io_demand.py`, `io_pv.py`, `io_weather.py` | Read each public source into one standard shape | [spec/data_sources.md](spec/data_sources.md) |
-| Network total | `clean.py` | Clean the substation files and sum them into one half-hourly series | [spec/network_total.md](spec/network_total.md) |
-| Targets | `targets.py` | Turn the series into the three scored targets and the daily lows | [spec/targets.md](spec/targets.md) |
-| Models | `models.py` | The daily models M2 to M6 (M1 needs no fit) | [spec/models.md](spec/models.md) |
-| POE and evaluation | `poe.py`, `evaluate.py` | Turn a model into POE10, POE50 and POE90; backtest and score | [spec/poe_and_evaluation.md](spec/poe_and_evaluation.md) |
-| Outputs | `plots.py`, `config.py`, notebooks | Figures, tables and checks, and where each is written | [spec/outputs.md](spec/outputs.md) |
-
-Data flows in that order: sources, network total, targets, models, POE, scores, outputs.
-
-## What a publication folder holds
+### What a publication folder holds
 
 Each `publication/NN_name/` is self-describing:
 
@@ -55,21 +48,36 @@ Each `publication/NN_name/` is self-describing:
 A submitted paper is marked by a git tag. The tag is the guarantee that its results can be
 rebuilt after the shared package has moved on; the package is not copied per paper.
 
-## Exploration
+### Exploration
 
 `exploration/` holds first looks, superseded figures and experiments. It is not held to the
 standard of a publication: its notebooks are a record, are not rerun when the package changes,
 and their outputs are git-ignored. Nothing in a publication folder may depend on it. Work moves
 from exploration into a publication only by being rebuilt there.
 
-## Configuration
+### Configuration
 
 One file at the repository root. `config.example.yaml` is committed and holds every parameter
 that is a decision, each with a comment. `config.local.yaml` is a git-ignored copy with the real
 raw-data paths. Notebooks find the root by walking up to the nearest config file, so they run
 from any depth. A second config is added only when a second publication needs other settings.
 
-## Rules that hold everywhere
+## Capabilities
+
+| Capability | Code | What it does | File |
+|---|---|---|---|
+| Data sources | `io_demand.py`, `io_pv.py`, `io_weather.py` | Read each public source into one standard shape | [specs/data_sources.md](specs/data_sources.md) |
+| Network total | `clean.py` | Clean the substation files and sum them into one half-hourly series | [specs/network_total.md](specs/network_total.md) |
+| Targets | `targets.py` | Turn the series into the three scored targets and the daily lows | [specs/targets.md](specs/targets.md) |
+| Models | `models.py` | The daily models M2 to M6 (M1 needs no fit) | [specs/models.md](specs/models.md) |
+| POE and evaluation | `poe.py`, `evaluate.py` | Turn a model into POE10, POE50 and POE90; backtest and score | [specs/poe_and_evaluation.md](specs/poe_and_evaluation.md) |
+| Outputs | `plots.py`, `config.py`, notebooks | Figures, tables and checks, and where each is written | [specs/outputs.md](specs/outputs.md) |
+
+Data flows in that order: sources, network total, targets, models, POE, scores, outputs.
+
+## Cross-cutting constraints
+
+Rules that hold everywhere:
 
 - **No private or confidential data.** Every input is public. Nothing private or confidential
   is committed: no customer data, no internal network data, no credentials, no local paths.
@@ -87,7 +95,7 @@ from any depth. A second config is added only when a second publication needs ot
 
 | To add | Do this | Detail |
 |---|---|---|
-| A data source or another network | Write a reader that returns the standard shapes | [spec/data_sources.md](spec/data_sources.md) |
-| A model | Add one entry at the end of the model list | [spec/models.md](spec/models.md) |
+| A data source or another network | Write a reader that returns the standard shapes | [specs/data_sources.md](specs/data_sources.md) |
+| A model | Add one entry at the end of the model list | [specs/models.md](specs/models.md) |
 | A publication | Add `publication/NN_name/` with the contents listed above | this page |
 | An experiment | Add a folder under `exploration/` | this page |

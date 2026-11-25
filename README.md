@@ -57,7 +57,7 @@ src/pynmdf/                  the shared package: all logic lives here
 tests/                       pytest tests on synthetic data
 publication/01_conference/   the conference paper: notebooks, results, decision record
 exploration/                 first looks and superseded figures; no paper relies on it
-planning/                    intent, spec, plan and status of the repository
+planning/                    status, intent and spec of the repository, and the record of each change
 config.example.yaml          data paths and every decision parameter
 AGENTS.md                    guidance for coding agents
 ```
@@ -122,8 +122,9 @@ Twelve tests, all on synthetic data. They need no data files.
 
 ## Planning documents
 
-[planning/](planning/01_intent.md) holds the intent, the spec, the plan and the status of the
-repository. Each publication keeps its own decision record.
+[planning/](planning/00_status.md) holds the status, the intent and the spec of the repository,
+and one folder for each change made to it. [planning/README.md](planning/README.md) says how
+the folder works. Each publication keeps its own decision record.
 
 ## Licence
 

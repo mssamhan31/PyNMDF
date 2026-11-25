@@ -1,17 +1,17 @@
-# Spec: models
+# Models
 
-Back to the [spec](../02_spec.md).
+Back to the [spec index](../02_spec.md).
 
 ## Purpose
 
 Six models that differ only in what they are given, so that a difference in score can be
 credited to one thing.
 
-## Code
+**Code.** `src/pynmdf/models.py`. M1 needs no fit and lives in `poe.naive_forecasts`.
 
-`src/pynmdf/models.py`. M1 needs no fit and lives in `poe.naive_forecasts`.
+## Process
 
-## The models
+### The models
 
 | ID | Form | Given |
 |---|---|---|
@@ -24,7 +24,7 @@ credited to one thing.
 
 M2 to M5 are a ladder: each step changes one thing. M6 is M3's information in a tree model.
 
-## How they are fitted
+### How they are fitted
 
 - Each model is fitted twice, once on the overnight low and once on the daytime low. The lower
   prediction is the day's minimum.
@@ -33,7 +33,7 @@ M2 to M5 are a ladder: each step changes one thing. M6 is M3's information in a 
 - A non-working day is a Saturday, a Sunday or a public holiday: one flag, not two.
 - XGBoost runs with fixed settings from the config. Nothing is tuned.
 
-## Temperature as a V in M4
+### Temperature as a V in M4
 
 Demand rises on both cold and hot days, so one straight slope on a temperature is the wrong
 shape. M4 uses two columns for each temperature, built from that temperature and one knot:
@@ -55,7 +55,14 @@ therefore given the same variables.
 
 Mean temperature is not used: it is the average of the other two and adds nothing to them.
 
-## Rules
+### Adding a model
+
+1. Add one entry at the end of `SPECS`, and a row to `MODEL_INFO` if it is one of the study's
+   models.
+2. Add or extend a test.
+3. Record the decision, with whether it came before or after the results were seen.
+
+## Constraints
 
 - **The model list is data.** `SPECS` maps each model to its estimator and its columns.
 - **Entries are only added at the end of `SPECS`.** A model's position seeds its random draws.
@@ -67,13 +74,5 @@ Mean temperature is not used: it is the average of the other two and adds nothin
   first built.
 - **The form of temperature is settled.** It is not changed again in the light of a score.
 
-## Adding a model
-
-1. Add one entry at the end of `SPECS`, and a row to `MODEL_INFO` if it is one of the study's
-   models.
-2. Add or extend a test.
-3. Record the decision, with whether it came before or after the results were seen.
-
-## Decision record
-
-`publication/01_conference/analysis_plan.md`: D9, D19, D20, D23, D37 and D38.
+**Decision record.** `publication/01_conference/analysis_plan.md`: D9, D19, D20, D23, D37 and
+D38.
