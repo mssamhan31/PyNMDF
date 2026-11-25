@@ -35,12 +35,6 @@ MODEL_STYLE = {
     "M4": (ORANGE, "s", "--"),
     "M5": (GREEN, "^", "-."),
 }
-MODEL_TITLES = {
-    "M2": "M2: time trend (no PV)",
-    "M3": "M3: PV only",
-    "M4": "M4: PV + weather",
-    "M5": "M5: PV + weather (XGBoost)",
-}
 MONTH_INITIALS = list("JFMAMJJASOND")
 # One hue from white to dark, so more is darker in colour and in greyscale alike.
 BLUES = LinearSegmentedColormap.from_list("blues", ["#ffffff", BLUE, "#0b2a5b"])
@@ -472,7 +466,8 @@ def poe_bands(annual: pd.DataFrame, models: list[str], ylabel: str) -> Figure:
         )
         axis.plot(rows["year"], rows["poe50"], color=colour)
         axis.plot(rows["year"], rows["actual"], color=INK, marker="o", linestyle="none")
-        axis.set_title(MODEL_TITLES[model], fontsize=8)
+        # A panel is titled with its model's ID only; the paper's table says what each model is.
+        axis.set_title(model, fontsize=8)
         axis.set_xticks(rows["year"].iloc[::label_every])
         if label_every > 1:
             axis.set_xticks(rows["year"], minor=True)

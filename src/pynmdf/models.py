@@ -62,17 +62,19 @@ M4_VARIANTS = {
 # only ever added at the end: adding one must not change the draws of another.
 SPECS = MODELS | M4_VARIANTS
 
-# Short labels for the paper's table of models.
+# The paper's table of models: the type of each, and whether it uses PV capacity and weather.
+# Each row differs from the next in one cell. M2 is marked as a time trend, the one thing a
+# Yes or No on PV and weather cannot say.
 MODEL_INFO = pd.DataFrame(
     [
         ("M1", "Naive", "No", "No"),
-        ("M2", "Time trend", "No", "No"),
-        ("M3", "PV only", "Yes", "No"),
-        ("M4", "PV + weather, linear", "Yes", "Yes"),
-        ("M5", "PV + weather, XGBoost", "Yes", "Yes"),
-        ("M6", "PV only, XGBoost", "Yes", "No"),
+        ("M2", "Linear, time trend", "No", "No"),
+        ("M3", "Linear", "Yes", "No"),
+        ("M4", "Linear", "Yes", "Yes"),
+        ("M5", "XGBoost", "Yes", "Yes"),
+        ("M6", "XGBoost", "Yes", "No"),
     ],
-    columns=["ID", "Model", "PV", "Weather"],
+    columns=["ID", "Type", "PV", "Weather"],
 )
 
 

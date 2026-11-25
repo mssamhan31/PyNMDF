@@ -17,7 +17,7 @@ Paths on this page are relative to this folder. Commands are run from the reposi
 | Path | Holds |
 |---|---|
 | [results_summary.md](results_summary.md) | The numbers behind the paper, by type of evidence, each with the file it comes from |
-| [analysis_plan.md](analysis_plan.md) | The design, and the record of every decision and finding made while building (D1 to D40, F1 to F11). Its seventh round holds the key from the paper's earlier figure and table numbers to the current ones |
+| [analysis_plan.md](analysis_plan.md) | The design, and the record of every decision and finding made while building (D1 to D41, F1 to F11). Its seventh round holds the key from the paper's earlier figure and table numbers to the current ones |
 | `notes/` | The author's own notes behind three decisions |
 | `notebooks/` | The eight notebooks. Each opens with the figures, tables and checks it produces |
 | `results/` | Figures, tables and checks (committed) |
@@ -77,8 +77,8 @@ demand": the daytime low reads "daytime minimum demand". The text, the tables an
 | Fig. 1, three panels on one year axis: (a) the annual overnight low and daytime low, (b) when each year's lowest 1% of half hours occur, as a heat map, (c) PV capacity | `figures/fig1`, `tables/fig1_data.csv`, `tables/fig1_hours.csv` | 03 | `plots.annual_lows_hours_and_pv` |
 | Fig. 2: the annual daytime low against PV capacity, with the fitted line and R-squared | `figures/fig2`, `tables/fig2_data.csv` | 04, section 2 | `plots.daytime_low_against_pv` |
 | Fig. 3: the daily daytime low against solar exposure (left) and against maximum temperature (right), 2015, 2020 and 2025 | `figures/fig3`, `tables/fig3_fits.csv` | 04, section 3 | `plots.daytime_low_against_solar_and_temperature` |
-| Fig. 4: POE bands on the annual daytime low, M2 to M5 | `figures/fig4` | 06, section 4 | `plots.poe_bands` |
-| Table I: the six models, and whether each uses PV and weather | `tables/table1.csv` | 05, section 3 | |
+| Fig. 4: POE bands on the annual daytime low, one panel each for M2 to M5, titled by ID | `figures/fig4` | 06, section 4 | `plots.poe_bands` |
+| Table I: the six models: the type of each (naive, linear or XGBoost), and whether it uses PV and weather | `tables/table1.csv` | 05, section 3 | |
 | Table II: the daily out-of-sample test: the mean absolute error of each model, and the change in per cent for three pairs | `tables/table2.csv` | 08, section 6 | |
 | Table III: one-year-ahead POE scores on the daytime low, six models, annual and monthly | `tables/table3.csv` | 06, section 2 | |
 | Straight-line fit of the annual daytime low on PV capacity and on the year | `tables/table_pv_fit.csv` | 04, section 2 | |

@@ -3,7 +3,7 @@
 Where the repository stands. The first two sections are rewritten whenever the state changes.
 The log gains one entry per finished step, newest first.
 
-## Now (25 November 2026)
+## Now (26 November 2026)
 
 - **Step in hand:** none. All six steps of the [plan](03_planning.md) are done; what is left
   is in its backlog.
@@ -13,14 +13,15 @@ The log gains one entry per finished step, newest first.
   step 6 (public).
 - **Review gate:** publishable, with no blocker. Its questions are answered and its findings
   are fixed, except the continuous integration workflow, which stays in the backlog.
-- **Branch:** `main`, pushed to `origin`. The work of 24 November 2026 was done on
+- **Branch:** `main`. `origin` holds it up to `61e56ce`; the commit after that (D41) is
+  merged but not yet pushed. The work of 24 November 2026 was done on
   `piecewise-m4-and-restructure` and merged; that of 25 November 2026 on
   `heatmap-and-temperature-figures`, also merged.
 - **Tag:** `conference-v1-straight-line-m4` on `71c3cb3`, the commit the first results came
   from. Pushed.
 - **Results:** in `publication/01_conference/results`, committed, with M4 taking maximum and
   minimum temperature each as a V. Every number of M1, M2, M3, M5 and M6 is identical to the
-  archived copy. The paper set is four figures and three tables, as revised by D39 and D40.
+  archived copy. The paper set is four figures and three tables, as revised by D39 to D41.
 
 ### Where the repository differs from the spec
 
@@ -66,6 +67,10 @@ Decided on 24 November 2026, after the review:
   `fig2_data.csv` and `fig3_fits.csv` did not change; the numbers of Table II and of the
   pairs by year are those of before; every other table and check is byte-identical.
 - Done on the branch `heatmap-and-temperature-figures`, merged into `main` and pushed.
+- After that push (D41): Table I names the type of each model (naive, linear or XGBoost) in
+  place of a model name, and the panels of Fig. 4 are titled by ID only. Notebooks 05 and 06
+  were rerun; no number changed. Committed on the same branch on 26 November 2026 and merged
+  into `main`; not yet pushed.
 
 ### 24 November 2026: public
 

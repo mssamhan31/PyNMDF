@@ -54,7 +54,7 @@ second half of point 4: on the monthly daytime low, M4 scores better than M3.
 | **After the scores were seen** | **Notebook 08**, the daily out-of-sample test, and its three pairs | D25 |
 | **After the scores were seen** | **The form of temperature in M4**: maximum and minimum temperature each as a V, in place of one straight term each, on the supervisor's advice. The knots were chosen on 2015 to 2018 only | D37 |
 | After the scores were seen | The diagnosis of M4 (M4 itself unchanged); the method of the rescaling; the straight-line fit of section 1.4 and Fig. 2; the fourth panel (M5) of Fig. 4 | D24, D22, D30, D27, D34 |
-| After the scores were seen | What the paper shows, with no number changed: the heat map returns as a panel of Fig. 1, and Fig. 3 gains a panel on maximum temperature; Table I loses two columns, and Table II the mean error and the number of days; the figures say "minimum demand" for a low | D39, D40 |
+| After the scores were seen | What the paper shows, with no number changed: the heat map returns as a panel of Fig. 1, and Fig. 3 gains a panel on maximum temperature; Table I is cut to the type of each model and its use of PV and weather, and Table II to the mean absolute error; the figures say "minimum demand" for a low, and the panels of Fig. 4 are titled by ID | D39 to D41 |
 
 ### 0.3 Four things to keep in view
 
