@@ -27,6 +27,7 @@ publication/01_conference/       everything that belongs to the conference paper
   notes/                         the author's notes behind three decisions
   notebooks/                     notebooks 01 to 08
   results/                       figures, tables and checks (committed)
+  ppt/                           a deck that explains the method; not rebuilt by the notebooks
   data/interim/                  cache passed between notebooks (git-ignored)
   archive/v1_straight_line_m4/   the results and code as they stood before M4 was revised
 exploration/                     work that no paper relies on

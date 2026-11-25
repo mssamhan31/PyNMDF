@@ -21,6 +21,7 @@ Paths on this page are relative to this folder. Commands are run from the reposi
 | `notes/` | The author's own notes behind three decisions |
 | `notebooks/` | The eight notebooks. Each opens with the figures, tables and checks it produces |
 | `results/` | Figures, tables and checks (committed) |
+| `ppt/` | A deck that explains the method and the results, as they stood on 25 November 2026. It is made by hand, not rebuilt by the notebooks |
 | `data/interim/` | Cached data passed between notebooks (git-ignored) |
 | [archive/v1_straight_line_m4/](archive/v1_straight_line_m4/README.md) | The results and code as they stood before M4 was revised |
 
