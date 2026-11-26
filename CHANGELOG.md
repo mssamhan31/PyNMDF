@@ -3,10 +3,9 @@
 What each release of this repository holds, newest first. A release is a tag on `main`,
 published on GitHub and archived on Zenodo with its own DOI.
 
-## 1.0.0
+## 1.0.0, 27 November 2026
 
-Not released yet. The date is written here on the day of the release, which is made just before
-the conference paper is submitted.
+DOI: [10.5281/zenodo.24571169](https://doi.org/10.5281/zenodo.24571169).
 
 The first release: the repository as it stands when the conference paper is submitted.
 

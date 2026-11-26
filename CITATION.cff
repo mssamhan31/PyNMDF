@@ -1,11 +1,14 @@
 # How to cite this repository, in Citation File Format 1.2.0. GitHub reads this file for its
-# "Cite this repository" box. Zenodo does not: it reads .zenodo.json, so the two files must say
-# the same, and tests/test_release_metadata.py checks that they do.
-# The version, the release date and the DOI are written in on the day of a release; see the
-# checklist in planning/specs/release.md.
+# "Cite this repository" box. .zenodo.json holds the same details for the record on Zenodo, so
+# the two files must say the same, and tests/test_release_metadata.py checks that they do.
+# The version, the release date and the DOI are those of the latest release. They are written
+# in on the day of a release; see the checklist in planning/specs/release.md.
 cff-version: 1.2.0
 message: "If you use this software, please cite it using the metadata from this file."
 title: "PyNMDF: Python for Network Minimum Demand Forecasting"
+version: "1.0.0"
+date-released: "2026-11-27"
+doi: 10.5281/zenodo.24571169
 abstract: >-
   PyNMDF is the reproducible analysis code behind research on forecasting minimum demand in
   distribution networks as rooftop photovoltaic (PV) capacity grows. It holds one shared

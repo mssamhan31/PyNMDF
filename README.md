@@ -61,7 +61,7 @@ planning/                    status, intent and spec of the repository, and the 
 config.example.yaml          data paths and every decision parameter
 AGENTS.md                    guidance for coding agents
 CITATION.cff                 how to cite the repository
-.zenodo.json                 the details of the Zenodo record that a release creates
+.zenodo.json                 the details of the Zenodo record of a release
 CHANGELOG.md                 what each release holds
 ```
 
@@ -132,12 +132,12 @@ the folder works. Each publication keeps its own decision record.
 
 ## How to cite
 
-Use "Cite this repository" on the repository's GitHub page. It reads
-[CITATION.cff](CITATION.cff), which holds the title, the authors and the licence.
+Cite the release that was used. Release 1.0.0, of 27 November 2026, is archived on Zenodo:
+<https://doi.org/10.5281/zenodo.24571169>.
 
-There is no release yet, so there is no DOI to cite. The first release, 1.0.0, is made just
-before the conference paper is submitted, and is archived on Zenodo. Its DOI will be written here.
-[CHANGELOG.md](CHANGELOG.md) says what each release holds.
+"Cite this repository" on the repository's GitHub page gives the citation in APA and BibTeX
+form. It reads [CITATION.cff](CITATION.cff). [CHANGELOG.md](CHANGELOG.md) says what each
+release holds.
 
 ## Licence
 

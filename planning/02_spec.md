@@ -14,7 +14,7 @@ has a short page under [specs/](specs/), to be read only when needed.
 ```
 AGENTS.md  LICENSE  README.md  pyproject.toml  requirements.txt
 CITATION.cff                     how to cite the repository
-.zenodo.json                     the details of the Zenodo record that a release creates
+.zenodo.json                     the details of the Zenodo record of a release
 CHANGELOG.md                     what each release holds
 config.example.yaml              raw-data paths and every decision parameter (committed)
 config.local.yaml                the real local paths (git-ignored)
