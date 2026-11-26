@@ -42,8 +42,8 @@ downloaded:
 Expected output, after about 15 seconds:
 
 ```
-............                                                             [100%]
-12 passed
+..............                                                           [100%]
+14 passed
 ```
 
 The results of the conference paper can be read without running anything: start with
@@ -60,6 +60,9 @@ exploration/                 first looks and superseded figures; no paper relies
 planning/                    status, intent and spec of the repository, and the record of each change
 config.example.yaml          data paths and every decision parameter
 AGENTS.md                    guidance for coding agents
+CITATION.cff                 how to cite the repository
+.zenodo.json                 the details of the Zenodo record that a release creates
+CHANGELOG.md                 what each release holds
 ```
 
 The package is read in the order of the analysis:
@@ -118,13 +121,23 @@ run reproduces them exactly.
 .venv\Scripts\black --check src tests
 ```
 
-Twelve tests, all on synthetic data. They need no data files.
+Fourteen tests. Twelve run on synthetic data, and two read the citation files at the repository
+root. None needs a data file.
 
 ## Planning documents
 
 [planning/](planning/00_status.md) holds the status, the intent and the spec of the repository,
 and one folder for each change made to it. [planning/README.md](planning/README.md) says how
 the folder works. Each publication keeps its own decision record.
+
+## How to cite
+
+Use "Cite this repository" on the repository's GitHub page. It reads
+[CITATION.cff](CITATION.cff), which holds the title, the authors and the licence.
+
+There is no release yet, so there is no DOI to cite. The first release, 1.0.0, is made just
+before the conference paper is submitted, and is archived on Zenodo. Its DOI will be written here.
+[CHANGELOG.md](CHANGELOG.md) says what each release holds.
 
 ## Licence
 

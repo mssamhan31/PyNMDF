@@ -1,0 +1,35 @@
+{
+  "title": "PyNMDF: Python for Network Minimum Demand Forecasting",
+  "description": "PyNMDF is the reproducible analysis code behind research on forecasting minimum demand in distribution networks as rooftop photovoltaic (PV) capacity grows. It holds one shared package and one folder per publication. Every input is public.",
+  "upload_type": "software",
+  "creators": [
+    {
+      "name": "Samhan, Samhan",
+      "affiliation": "School of Photovoltaic and Renewable Energy Engineering, UNSW; Demand Forecasting, Ausgrid"
+    },
+    {
+      "name": "Haghdadi, Navid",
+      "affiliation": "Demand Forecasting, Ausgrid"
+    },
+    {
+      "name": "Sim, Daniel",
+      "affiliation": "Demand Forecasting, Ausgrid"
+    },
+    {
+      "name": "Bruce, Anna",
+      "affiliation": "School of Photovoltaic and Renewable Energy Engineering, UNSW"
+    },
+    {
+      "name": "Yildiz, Baran",
+      "affiliation": "School of Photovoltaic and Renewable Energy Engineering, UNSW"
+    }
+  ],
+  "license": "mit",
+  "keywords": [
+    "minimum demand",
+    "rooftop photovoltaics",
+    "distribution network",
+    "probabilistic forecasting",
+    "probability of exceedance"
+  ]
+}

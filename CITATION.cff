@@ -1,0 +1,30 @@
+# How to cite this repository, in Citation File Format 1.2.0. GitHub reads this file for its
+# "Cite this repository" box. Zenodo does not: it reads .zenodo.json, so the two files must say
+# the same, and tests/test_release_metadata.py checks that they do.
+# The version, the release date and the DOI are written in on the day of a release; see the
+# checklist in planning/specs/release.md.
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata from this file."
+title: "PyNMDF: Python for Network Minimum Demand Forecasting"
+abstract: >-
+  PyNMDF is the reproducible analysis code behind research on forecasting minimum demand in
+  distribution networks as rooftop photovoltaic (PV) capacity grows. It holds one shared
+  package and one folder per publication. Every input is public.
+authors:
+  - family-names: Samhan
+    given-names: Samhan
+    affiliation: "School of Photovoltaic and Renewable Energy Engineering, UNSW; Demand Forecasting, Ausgrid"
+  - family-names: Haghdadi
+    given-names: Navid
+    affiliation: "Demand Forecasting, Ausgrid"
+  - family-names: Sim
+    given-names: Daniel
+    affiliation: "Demand Forecasting, Ausgrid"
+  - family-names: Bruce
+    given-names: Anna
+    affiliation: "School of Photovoltaic and Renewable Energy Engineering, UNSW"
+  - family-names: Yildiz
+    given-names: Baran
+    affiliation: "School of Photovoltaic and Renewable Energy Engineering, UNSW"
+license: MIT
+repository-code: "https://github.com/mssamhan31/PyNMDF"

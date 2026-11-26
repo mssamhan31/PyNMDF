@@ -13,6 +13,9 @@ has a short page under [specs/](specs/), to be read only when needed.
 
 ```
 AGENTS.md  LICENSE  README.md  pyproject.toml  requirements.txt
+CITATION.cff                     how to cite the repository
+.zenodo.json                     the details of the Zenodo record that a release creates
+CHANGELOG.md                     what each release holds
 config.example.yaml              raw-data paths and every decision parameter (committed)
 config.local.yaml                the real local paths (git-ignored)
 src/pynmdf/                      the shared package: all logic lives here
@@ -73,6 +76,7 @@ from any depth. A second config is added only when a second publication needs ot
 | Models | `models.py` | The daily models M2 to M6 (M1 needs no fit) | [specs/models.md](specs/models.md) |
 | POE and evaluation | `poe.py`, `evaluate.py` | Turn a model into POE10, POE50 and POE90; backtest and score | [specs/poe_and_evaluation.md](specs/poe_and_evaluation.md) |
 | Outputs | `plots.py`, `config.py`, notebooks | Figures, tables and checks, and where each is written | [specs/outputs.md](specs/outputs.md) |
+| Release and citation | `CITATION.cff`, `.zenodo.json`, `CHANGELOG.md` | How the repository is cited, and how a release is cut and archived on Zenodo | [specs/release.md](specs/release.md) |
 
 Data flows in that order: sources, network total, targets, models, POE, scores, outputs.
 
